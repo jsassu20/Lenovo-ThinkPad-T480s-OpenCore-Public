@@ -1,0 +1,31 @@
+
+
+Buy an CH431A SPI EEPROM Programmer and a SOI8C Clip 
+
+Open up the bottom cover on the T480/s and disconnect the battery and the CMOS battery cable from the board. 
+
+Dump your BIOS using the SPI Programmer on a separate computer and verify that it was read correctly (Im not explaining how to do this part its very easy to figure out)
+
+Read your chip 3 different times and verify each read and then save the file after each verification so that you have 3 different BIOS.bin files which all are the same size so that you are sure you have a proper backup of your BIOS before proceeding.
+Each saved bin file should be exactly 16,384 KB in size for the T480s. If they all aren’t the same size do no proceed, go back and adjust the clip and read it again.
+
+
+
+When you are sure you dumped the bios properly copy and paste anyone of the 3 bin files you created when you saved the data after each verification and put it in an empty folder on the desktop with the name BIOS along with uefipatch.exe and xx80_patches_v6.txt.
+
+Open up a CMD window in windows 10 and change the directory to the BIOS folder with the 3 files you just moved 
+
+Drag the UEFIPatch.exe file into the CMD windows and then press space, drag the BIOS.bin file you copied to the BIOS folder into the CMD window and then press space, drag the xx80_patches_v6.txt file into the cmd window and now press enter and the command window will process some info and create a patched bios.bin in the BIOS folder on your desktop. (Don’t worry about the warnings that might display after the command is finished)
+
+
+After the Patch has been applied open your patched bin file in the hex editor and go to find and replace option in the top bar. Change format to hexadecimal and search and replace the string listed below then save the file when it has been replaced and flash the patched bios.bin file back to you T480s bios chip.
+
+
+SEARCH:    4C 4E 56 42 42 53 45 43 FB
+
+REPLACE:   4C 4E 56 42 42 53 45 43 FF 
+
+Hexidecimal format
+
+
+All whitelists will be removed and the Advanced menu will be unlocked in your BIOS. Fix date and time by booting the os and setting the time via the operating system and the warning will go away.
