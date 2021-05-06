@@ -3,9 +3,9 @@
  * AML/ASL+ Disassembler version 20200925 (64-bit version)
  * Copyright (c) 2000 - 2020 Intel Corporation
  * 
- * Disassembling to symbolic ASL+ operators
+ * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of SSDT7.aml, Sun May  2 11:05:07 2021
+ * Disassembly of SSDT7.aml, Thu May  6 01:10:51 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
@@ -22,6 +22,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CtdpB", 0x00001000)
 {
     External (_PR_.CPPC, IntObj)
     External (_PR_.PR00, DeviceObj)
+    External (_PR_.PR00._PSS, MethodObj)    // 0 Arguments
     External (_PR_.PR00.LPSS, PkgObj)
     External (_PR_.PR00.TPSS, PkgObj)
     External (_PR_.PR01, DeviceObj)
@@ -111,65 +112,65 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CtdpB", 0x00001000)
 
         Method (CTCU, 0, NotSerialized)
         {
-            PPL1 = PT2D /* External reference */
-            PL1E = One
-            \CTPC = One
-            If ((Zero == \FTPS))
+            Store (PT2D, PPL1) /* \_SB_.PCI0.PPL1 */
+            Store (One, PL1E) /* \_SB_.PCI0.PL1E */
+            Store (One, \CTPC) /* External reference */
+            If (LEqual (Zero, \FTPS))
             {
-                \CTPR = \CTPC /* External reference */
+                Store (\CTPC, \CTPR) /* External reference */
             }
-            ElseIf ((\CTPR == \FTPS))
+            ElseIf (LEqual (\CTPR, \FTPS))
             {
-                \CTPR = \CTPC /* External reference */
-                \FTPS = \CTPC /* External reference */
+                Store (\CTPC, \CTPR) /* External reference */
+                Store (\CTPC, \FTPS) /* External reference */
             }
             Else
             {
-                \CTPR = \CTPC /* External reference */
-                \FTPS = \CTPC /* External reference */
-                \FTPS++
+                Store (\CTPC, \CTPR) /* External reference */
+                Store (\CTPC, \FTPS) /* External reference */
+                Increment (\FTPS)
             }
 
             \PNTF (0x80)
-            TAR = (TAR2 - One)
-            CTCL = 0x02
+            Subtract (TAR2, One, TAR) /* \_SB_.PCI0.TAR_ */
+            Store (0x02, CTCL) /* \_SB_.PCI0.CTCL */
         }
 
         Method (CTCN, 0, NotSerialized)
         {
-            If ((CTCL == One))
+            If (LEqual (CTCL, One))
             {
-                PPL1 = PT0D /* External reference */
-                PL1E = One
+                Store (PT0D, PPL1) /* \_SB_.PCI0.PPL1 */
+                Store (One, PL1E) /* \_SB_.PCI0.PL1E */
                 NPPC (TARN)
-                TAR = (TARN - One)
-                CTCL = Zero
+                Subtract (TARN, One, TAR) /* \_SB_.PCI0.TAR_ */
+                Store (Zero, CTCL) /* \_SB_.PCI0.CTCL */
             }
-            ElseIf ((CTCL == 0x02))
+            ElseIf (LEqual (CTCL, 0x02))
             {
-                CTCL = Zero
-                TAR = (TARN - One)
+                Store (Zero, CTCL) /* \_SB_.PCI0.CTCL */
+                Subtract (TARN, One, TAR) /* \_SB_.PCI0.TAR_ */
                 NPPC (TARN)
-                PPL1 = PT0D /* External reference */
-                PL1E = One
+                Store (PT0D, PPL1) /* \_SB_.PCI0.PPL1 */
+                Store (One, PL1E) /* \_SB_.PCI0.PL1E */
             }
             Else
             {
-                CTCL = Zero
-                TAR = (TARN - One)
+                Store (Zero, CTCL) /* \_SB_.PCI0.CTCL */
+                Subtract (TARN, One, TAR) /* \_SB_.PCI0.TAR_ */
                 NPPC (TARN)
-                PPL1 = PT0D /* External reference */
-                PL1E = One
+                Store (PT0D, PPL1) /* \_SB_.PCI0.PPL1 */
+                Store (One, PL1E) /* \_SB_.PCI0.PL1E */
             }
         }
 
         Method (CTCD, 0, NotSerialized)
         {
-            CTCL = One
-            TAR = (TAR1 - One)
+            Store (One, CTCL) /* \_SB_.PCI0.CTCL */
+            Subtract (TAR1, One, TAR) /* \_SB_.PCI0.TAR_ */
             NPPC (TAR1)
-            PPL1 = PT1D /* External reference */
-            PL1E = One
+            Store (PT1D, PPL1) /* \_SB_.PCI0.PPL1 */
+            Store (One, PL1E) /* \_SB_.PCI0.PL1E */
         }
 
         Name (TRAT, Zero)
@@ -177,48 +178,48 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CtdpB", 0x00001000)
         Name (TMPI, Zero)
         Method (NPPC, 1, Serialized)
         {
-            TRAT = Arg0
+            Store (Arg0, TRAT) /* \_SB_.PCI0.TRAT */
             If (CondRefOf (\_PR.PR00._PSS))
             {
-                If ((\_SB.OSCP & 0x0400))
+                If (And (\_SB.OSCP, 0x0400))
                 {
-                    TMPI = SizeOf (\_PR.PR00.TPSS)
+                    Store (SizeOf (\_PR.PR00.TPSS), TMPI) /* \_SB_.PCI0.TMPI */
                 }
                 Else
                 {
-                    TMPI = SizeOf (\_PR.PR00.LPSS)
+                    Store (SizeOf (\_PR.PR00.LPSS), TMPI) /* \_SB_.PCI0.TMPI */
                 }
 
-                While ((TMPI != Zero))
+                While (LNotEqual (TMPI, Zero))
                 {
-                    TMPI--
-                    If ((\_SB.OSCP & 0x0400))
+                    Decrement (TMPI)
+                    If (And (\_SB.OSCP, 0x0400))
                     {
-                        PRAT = DerefOf (DerefOf (\_PR.PR00.TPSS [TMPI]) [0x04])
+                        Store (DerefOf (Index (DerefOf (Index (\_PR.PR00.TPSS, TMPI)), 0x04)), PRAT) /* \_SB_.PCI0.PRAT */
                     }
                     Else
                     {
-                        PRAT = DerefOf (DerefOf (\_PR.PR00.LPSS [TMPI]) [0x04])
+                        Store (DerefOf (Index (DerefOf (Index (\_PR.PR00.LPSS, TMPI)), 0x04)), PRAT) /* \_SB_.PCI0.PRAT */
                     }
 
-                    PRAT >>= 0x08
-                    If ((PRAT >= TRAT))
+                    ShiftRight (PRAT, 0x08, PRAT) /* \_SB_.PCI0.PRAT */
+                    If (LGreaterEqual (PRAT, TRAT))
                     {
-                        \CTPC = TMPI /* \_SB_.PCI0.TMPI */
-                        If ((Zero == \FTPS))
+                        Store (TMPI, \CTPC) /* External reference */
+                        If (LEqual (Zero, \FTPS))
                         {
-                            \CTPR = \CTPC /* External reference */
+                            Store (\CTPC, \CTPR) /* External reference */
                         }
-                        ElseIf ((\CTPR == \FTPS))
+                        ElseIf (LEqual (\CTPR, \FTPS))
                         {
-                            \CTPR = \CTPC /* External reference */
-                            \FTPS = \CTPC /* External reference */
+                            Store (\CTPC, \CTPR) /* External reference */
+                            Store (\CTPC, \FTPS) /* External reference */
                         }
                         Else
                         {
-                            \CTPR = \CTPC /* External reference */
-                            \FTPS = \CTPC /* External reference */
-                            \FTPS++
+                            Store (\CTPC, \CTPR) /* External reference */
+                            Store (\CTPC, \FTPS) /* External reference */
+                            Increment (\FTPS)
                         }
 
                         \PNTF (0x80)
@@ -230,12 +231,12 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CtdpB", 0x00001000)
 
         Method (CLC2, 1, Serialized)
         {
-            Local0 = (PNHM & 0x0FFF0FF0)
+            And (PNHM, 0x0FFF0FF0, Local0)
             Switch (ToInteger (Local0))
             {
                 Case (0x000306C0)
                 {
-                    Return (((Arg0 * 0x05) / 0x04))
+                    Return (Divide (Multiply (Arg0, 0x05), 0x04, ))
                 }
                 Case (0x00040650)
                 {
@@ -243,7 +244,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CtdpB", 0x00001000)
                 }
                 Default
                 {
-                    Return (((Arg0 * 0x05) / 0x04))
+                    Return (Divide (Multiply (Arg0, 0x05), 0x04, ))
                 }
 
             }

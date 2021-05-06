@@ -3,9 +3,9 @@
  * AML/ASL+ Disassembler version 20200925 (64-bit version)
  * Copyright (c) 2000 - 2020 Intel Corporation
  * 
- * Disassembling to symbolic ASL+ operators
+ * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of SSDT4.aml, Sun May  2 11:05:07 2021
+ * Disassembly of SSDT4.aml, Thu May  6 01:10:51 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
@@ -284,7 +284,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
     External (XDST, IntObj)
     External (XHPR, UnknownObj)
 
-    If (((\RTBT == 0x01) && (\TBTS == 0x01)))
+    If (LAnd (LEqual (\RTBT, 0x01), LEqual (\TBTS, 0x01)))
     {
         Scope (\_SB.PCI0.RP05)
         {
@@ -348,20 +348,20 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                 ADBG (Arg0)
                 ADBG (Arg1)
                 ADBG (Arg2)
-                If ((Arg1 >= 0x01))
+                If (LGreaterEqual (Arg1, 0x01))
                 {
-                    WKEN = 0x00
-                    TOFF = 0x02
+                    Store (0x00, WKEN) /* \_SB_.PCI0.RP05.WKEN */
+                    Store (0x02, TOFF) /* External reference */
                 }
-                ElseIf ((Arg0 && Arg2))
+                ElseIf (LAnd (Arg0, Arg2))
                 {
-                    WKEN = 0x01
-                    TOFF = 0x01
+                    Store (0x01, WKEN) /* \_SB_.PCI0.RP05.WKEN */
+                    Store (0x01, TOFF) /* External reference */
                 }
                 Else
                 {
-                    WKEN = 0x00
-                    TOFF = 0x00
+                    Store (0x00, WKEN) /* \_SB_.PCI0.RP05.WKEN */
+                    Store (0x00, TOFF) /* External reference */
                 }
             }
 
@@ -377,30 +377,30 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                 Method (_ON, 0, NotSerialized)  // _ON_: Power On
                 {
                     ADBG ("S_ON")
-                    TRDO = 0x01
+                    Store (0x01, TRDO) /* External reference */
                     PON ()
-                    TRDO = 0x00
+                    Store (0x00, TRDO) /* External reference */
                     ADBG ("E_ON")
                 }
 
                 Method (_OFF, 0, NotSerialized)  // _OFF: Power Off
                 {
                     ADBG ("S_OFF")
-                    TRD3 = 0x01
+                    Store (0x01, TRD3) /* External reference */
                     POFF ()
-                    TRD3 = 0x00
+                    Store (0x00, TRD3) /* External reference */
                     ADBG ("E_OFF")
                 }
             }
 
             Method (PSTA, 0, NotSerialized)
             {
-                If ((DerefOf (PWRG [0x00]) != 0x00))
+                If (LNotEqual (DerefOf (Index (PWRG, 0x00)), 0x00))
                 {
-                    If ((DerefOf (PWRG [0x00]) == 0x01))
+                    If (LEqual (DerefOf (Index (PWRG, 0x00)), 0x01))
                     {
-                        If ((\_SB.GGOV (DerefOf (PWRG [0x02])) == DerefOf (PWRG [0x03]
-                            )))
+                        If (LEqual (\_SB.GGOV (DerefOf (Index (PWRG, 0x02))), DerefOf (Index (PWRG, 0x03
+                            ))))
                         {
                             Return (0x01)
                         }
@@ -410,10 +410,10 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                         }
                     }
 
-                    If ((DerefOf (PWRG [0x00]) == 0x02))
+                    If (LEqual (DerefOf (Index (PWRG, 0x00)), 0x02))
                     {
-                        If ((\_SB.PCI0.GEXP.GEPS (DerefOf (PWRG [0x01]), DerefOf (PWRG [0x02]
-                            )) == DerefOf (PWRG [0x03])))
+                        If (LEqual (\_SB.PCI0.GEXP.GEPS (DerefOf (Index (PWRG, 0x01)), DerefOf (Index (PWRG, 0x02
+                            ))), DerefOf (Index (PWRG, 0x03))))
                         {
                             Return (0x01)
                         }
@@ -424,12 +424,12 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                     }
                 }
 
-                If ((DerefOf (RSTG [0x00]) != 0x00))
+                If (LNotEqual (DerefOf (Index (RSTG, 0x00)), 0x00))
                 {
-                    If ((DerefOf (RSTG [0x00]) == 0x01))
+                    If (LEqual (DerefOf (Index (RSTG, 0x00)), 0x01))
                     {
-                        If ((\_SB.GGOV (DerefOf (RSTG [0x02])) == DerefOf (RSTG [0x03]
-                            )))
+                        If (LEqual (\_SB.GGOV (DerefOf (Index (RSTG, 0x02))), DerefOf (Index (RSTG, 0x03
+                            ))))
                         {
                             Return (0x01)
                         }
@@ -439,10 +439,10 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                         }
                     }
 
-                    If ((DerefOf (RSTG [0x00]) == 0x02))
+                    If (LEqual (DerefOf (Index (RSTG, 0x00)), 0x02))
                     {
-                        If ((\_SB.PCI0.GEXP.GEPS (DerefOf (RSTG [0x01]), DerefOf (RSTG [0x02]
-                            )) == DerefOf (RSTG [0x03])))
+                        If (LEqual (\_SB.PCI0.GEXP.GEPS (DerefOf (Index (RSTG, 0x01)), DerefOf (Index (RSTG, 0x02
+                            ))), DerefOf (Index (RSTG, 0x03))))
                         {
                             Return (0x01)
                         }
@@ -458,7 +458,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
 
             Method (SXEX, 0, Serialized)
             {
-                Local7 = \MMTB (TBSE)
+                Store (\MMTB (TBSE), Local7)
                 OperationRegion (TBDI, SystemMemory, Local7, 0x0550)
                 Field (TBDI, DWordAcc, NoLock, Preserve)
                 {
@@ -469,18 +469,18 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                     P2TB,   32
                 }
 
-                Local1 = 0x64
-                P2TB = 0x09
-                While ((Local1 > 0x00))
+                Store (0x64, Local1)
+                Store (0x09, P2TB) /* \_SB_.PCI0.RP05.SXEX.P2TB */
+                While (LGreater (Local1, 0x00))
                 {
-                    Local1 = (Local1 - 0x01)
-                    Local2 = TB2P /* \_SB_.PCI0.RP05.SXEX.TB2P */
-                    If ((Local2 == 0xFFFFFFFF))
+                    Store (Subtract (Local1, 0x01), Local1)
+                    Store (TB2P, Local2)
+                    If (LEqual (Local2, 0xFFFFFFFF))
                     {
                         Return (Zero)
                     }
 
-                    If ((Local2 & 0x01))
+                    If (And (Local2, 0x01))
                     {
                         Break
                     }
@@ -488,18 +488,18 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                     Sleep (0x05)
                 }
 
-                P2TB = 0x00
-                Local1 = 0x01F4
-                While ((Local1 > 0x00))
+                Store (0x00, P2TB) /* \_SB_.PCI0.RP05.SXEX.P2TB */
+                Store (0x01F4, Local1)
+                While (LGreater (Local1, 0x00))
                 {
-                    Local1 = (Local1 - 0x01)
-                    Local2 = TB2P /* \_SB_.PCI0.RP05.SXEX.TB2P */
-                    If ((Local2 == 0xFFFFFFFF))
+                    Store (Subtract (Local1, 0x01), Local1)
+                    Store (TB2P, Local2)
+                    If (LEqual (Local2, 0xFFFFFFFF))
                     {
                         Return (Zero)
                     }
 
-                    If ((DIVI != 0xFFFFFFFF))
+                    If (LNotEqual (DIVI, 0xFFFFFFFF))
                     {
                         Break
                     }
@@ -510,7 +510,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
 
             Method (PON, 0, NotSerialized)
             {
-                Local7 = \MMRP (\TBSE)
+                Store (\MMRP (\TBSE), Local7)
                 OperationRegion (L23P, SystemMemory, Local7, 0xE4)
                 Field (L23P, WordAcc, NoLock, Preserve)
                 {
@@ -522,7 +522,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                     L2TR,   1
                 }
 
-                Local6 = \MMTB (\TBSE)
+                Store (\MMTB (\TBSE), Local6)
                 OperationRegion (TBDI, SystemMemory, Local6, 0x0550)
                 Field (TBDI, DWordAcc, NoLock, Preserve)
                 {
@@ -540,88 +540,88 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                     Return (Zero)
                 }
 
-                TOFF = 0x00
-                G2SD = 0x00
+                Store (0x00, TOFF) /* External reference */
+                Store (0x00, G2SD) /* \_SB_.PCI0.RP05.G2SD */
                 If (\RTBC)
                 {
-                    If ((DerefOf (SCLK [0x00]) != 0x00))
+                    If (LNotEqual (DerefOf (Index (SCLK, 0x00)), 0x00))
                     {
-                        PCRA (0xDC, 0x100C, ~DerefOf (SCLK [0x01]))
+                        PCRA (0xDC, 0x100C, Not (DerefOf (Index (SCLK, 0x01))))
                     }
 
                     Sleep (\TBCD)
                 }
 
-                If ((DerefOf (PWRG [0x00]) != 0x00))
+                If (LNotEqual (DerefOf (Index (PWRG, 0x00)), 0x00))
                 {
-                    If ((DerefOf (PWRG [0x00]) == 0x01))
+                    If (LEqual (DerefOf (Index (PWRG, 0x00)), 0x01))
                     {
-                        \_SB.SGOV (DerefOf (PWRG [0x02]), DerefOf (PWRG [0x03]))
-                        TBPE = 0x01
+                        \_SB.SGOV (DerefOf (Index (PWRG, 0x02)), DerefOf (Index (PWRG, 0x03)))
+                        Store (0x01, TBPE) /* External reference */
                         Sleep (0x0A)
                     }
 
-                    If ((DerefOf (PWRG [0x00]) == 0x02))
+                    If (LEqual (DerefOf (Index (PWRG, 0x00)), 0x02))
                     {
-                        \_SB.PCI0.GEXP.SGEP (DerefOf (PWRG [0x01]), DerefOf (PWRG [0x02]), DerefOf (
-                            PWRG [0x03]))
-                        TBPE = 0x01
+                        \_SB.PCI0.GEXP.SGEP (DerefOf (Index (PWRG, 0x01)), DerefOf (Index (PWRG, 0x02)), DerefOf (
+                            Index (PWRG, 0x03)))
+                        Store (0x01, TBPE) /* External reference */
                         Sleep (0x0A)
                     }
                 }
 
-                If ((DerefOf (RSTG [0x00]) != 0x00))
+                If (LNotEqual (DerefOf (Index (RSTG, 0x00)), 0x00))
                 {
-                    If ((DerefOf (RSTG [0x00]) == 0x01))
+                    If (LEqual (DerefOf (Index (RSTG, 0x00)), 0x01))
                     {
-                        \_SB.SPC0 (DerefOf (RSTG [0x02]), (\_SB.GPC0 (DerefOf (RSTG [0x02]
-                            )) | 0x0100))
+                        \_SB.SPC0 (DerefOf (Index (RSTG, 0x02)), Or (\_SB.GPC0 (DerefOf (Index (RSTG, 0x02
+                            ))), 0x0100))
                     }
 
-                    If ((DerefOf (RSTG [0x00]) == 0x02))
+                    If (LEqual (DerefOf (Index (RSTG, 0x00)), 0x02))
                     {
-                        \_SB.PCI0.GEXP.SGEP (DerefOf (RSTG [0x01]), DerefOf (RSTG [0x02]), DerefOf (
-                            RSTG [0x03]))
+                        \_SB.PCI0.GEXP.SGEP (DerefOf (Index (RSTG, 0x01)), DerefOf (Index (RSTG, 0x02)), DerefOf (
+                            Index (RSTG, 0x03)))
                     }
                 }
 
-                DPGE = 0x00
-                L2TR = 0x01
+                Store (0x00, DPGE) /* External reference */
+                Store (0x01, L2TR) /* \_SB_.PCI0.RP05.PON_.L2TR */
                 Sleep (0x10)
-                Local0 = 0x00
+                Store (0x00, Local0)
                 While (L2TR)
                 {
-                    If ((Local0 > 0x04))
+                    If (LGreater (Local0, 0x04))
                     {
                         Break
                     }
 
                     Sleep (0x10)
-                    Local0++
+                    Increment (Local0)
                 }
 
-                DPGE = 0x01
-                Local0 = 0x00
-                While ((LASX == 0x00))
+                Store (0x01, DPGE) /* External reference */
+                Store (0x00, Local0)
+                While (LEqual (LASX, 0x00))
                 {
-                    If ((Local0 > 0x08))
+                    If (LGreater (Local0, 0x08))
                     {
                         Break
                     }
 
                     Sleep (0x10)
-                    Local0++
+                    Increment (Local0)
                 }
 
-                LEDM = 0x00
-                Local1 = PSD0 /* \_SB_.PCI0.RP05.PON_.PSD0 */
-                PSD0 = 0x00
-                Local2 = 0x14
-                While ((Local2 > 0x00))
+                Store (0x00, LEDM) /* External reference */
+                Store (PSD0, Local1)
+                Store (0x00, PSD0) /* \_SB_.PCI0.RP05.PON_.PSD0 */
+                Store (0x14, Local2)
+                While (LGreater (Local2, 0x00))
                 {
-                    Local2 = (Local2 - 0x01)
-                    Local3 = TB2P /* \_SB_.PCI0.RP05.PON_.TB2P */
-                    If ((Local3 != 0xFFFFFFFF))
+                    Store (Subtract (Local2, 0x01), Local2)
+                    Store (TB2P, Local3)
+                    If (LNotEqual (Local3, 0xFFFFFFFF))
                     {
                         Break
                     }
@@ -629,19 +629,19 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                     Sleep (0x0A)
                 }
 
-                If ((Local2 <= 0x00)){}
+                If (LLessEqual (Local2, 0x00)){}
                 SXEX ()
-                PSD0 = Local1
+                Store (Local1, PSD0) /* \_SB_.PCI0.RP05.PON_.PSD0 */
             }
 
             Method (POFF, 0, NotSerialized)
             {
-                If ((TOFF == 0x00))
+                If (LEqual (TOFF, 0x00))
                 {
                     Return (Zero)
                 }
 
-                Local7 = \MMRP (\TBSE)
+                Store (\MMRP (\TBSE), Local7)
                 OperationRegion (L23P, SystemMemory, Local7, 0xE4)
                 Field (L23P, WordAcc, NoLock, Preserve)
                 {
@@ -653,7 +653,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                     L2TR,   1
                 }
 
-                Local6 = \MMTB (TBSE)
+                Store (\MMTB (TBSE), Local6)
                 OperationRegion (TBDI, SystemMemory, Local6, 0x0550)
                 Field (TBDI, DWordAcc, NoLock, Preserve)
                 {
@@ -666,91 +666,91 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "RVP7Rtd3", 0x00001000)
                     P2TB,   32
                 }
 
-                Local1 = PSD0 /* \_SB_.PCI0.RP05.POFF.PSD0 */
-                PSD0 = 0x00
-                Local3 = P2TB /* \_SB_.PCI0.RP05.POFF.P2TB */
-                If ((TOFF > 0x01))
+                Store (PSD0, Local1)
+                Store (0x00, PSD0) /* \_SB_.PCI0.RP05.POFF.PSD0 */
+                Store (P2TB, Local3)
+                If (LGreater (TOFF, 0x01))
                 {
                     Sleep (0x0A)
-                    PSD0 = Local1
+                    Store (Local1, PSD0) /* \_SB_.PCI0.RP05.POFF.PSD0 */
                     Return (Zero)
                 }
 
-                TOFF = 0x00
-                PSD0 = Local1
-                L2TE = 0x01
+                Store (0x00, TOFF) /* External reference */
+                Store (Local1, PSD0) /* \_SB_.PCI0.RP05.POFF.PSD0 */
+                Store (0x01, L2TE) /* \_SB_.PCI0.RP05.POFF.L2TE */
                 Sleep (0x10)
-                Local0 = 0x00
+                Store (0x00, Local0)
                 While (L2TE)
                 {
-                    If ((Local0 > 0x04))
+                    If (LGreater (Local0, 0x04))
                     {
                         Break
                     }
 
                     Sleep (0x10)
-                    Local0++
+                    Increment (Local0)
                 }
 
-                LEDM = 0x01
-                If ((DerefOf (RSTG [0x00]) != 0x00))
+                Store (0x01, LEDM) /* External reference */
+                If (LNotEqual (DerefOf (Index (RSTG, 0x00)), 0x00))
                 {
-                    If ((DerefOf (RSTG [0x00]) == 0x01))
+                    If (LEqual (DerefOf (Index (RSTG, 0x00)), 0x01))
                     {
-                        \_SB.SPC0 (DerefOf (RSTG [0x02]), Local4 = (\_SB.GPC0 (DerefOf (RSTG [
-                            0x02])) & 0xFFFFFEFF))
+                        \_SB.SPC0 (DerefOf (Index (RSTG, 0x02)), And (\_SB.GPC0 (DerefOf (Index (RSTG, 0x02
+                            ))), 0xFFFFFEFF, Local4))
                         Sleep (0x0A)
                     }
 
-                    If ((DerefOf (RSTG [0x00]) == 0x02))
+                    If (LEqual (DerefOf (Index (RSTG, 0x00)), 0x02))
                     {
-                        \_SB.PCI0.GEXP.SGEP (DerefOf (RSTG [0x01]), DerefOf (RSTG [0x02]), (
-                            DerefOf (RSTG [0x03]) ^ 0x01))
+                        \_SB.PCI0.GEXP.SGEP (DerefOf (Index (RSTG, 0x01)), DerefOf (Index (RSTG, 0x02)), XOr (
+                            DerefOf (Index (RSTG, 0x03)), 0x01))
                         Sleep (0x0A)
                     }
                 }
 
                 If (\RTBC)
                 {
-                    If ((DerefOf (SCLK [0x00]) != 0x00))
+                    If (LNotEqual (DerefOf (Index (SCLK, 0x00)), 0x00))
                     {
-                        PCRO (0xDC, 0x100C, DerefOf (SCLK [0x01]))
+                        PCRO (0xDC, 0x100C, DerefOf (Index (SCLK, 0x01)))
                         Sleep (0x10)
                     }
                 }
 
-                If ((DerefOf (PWRG [0x00]) != 0x00))
+                If (LNotEqual (DerefOf (Index (PWRG, 0x00)), 0x00))
                 {
-                    If ((DerefOf (PWRG [0x00]) == 0x01))
+                    If (LEqual (DerefOf (Index (PWRG, 0x00)), 0x01))
                     {
-                        \_SB.SGOV (DerefOf (PWRG [0x02]), (DerefOf (PWRG [0x03]) ^ 
+                        \_SB.SGOV (DerefOf (Index (PWRG, 0x02)), XOr (DerefOf (Index (PWRG, 0x03)), 
                             0x01))
                     }
 
-                    If ((DerefOf (PWRG [0x00]) == 0x02))
+                    If (LEqual (DerefOf (Index (PWRG, 0x00)), 0x02))
                     {
-                        \_SB.PCI0.GEXP.SGEP (DerefOf (PWRG [0x01]), DerefOf (PWRG [0x02]), (
-                            DerefOf (PWRG [0x03]) ^ 0x01))
+                        \_SB.PCI0.GEXP.SGEP (DerefOf (Index (PWRG, 0x01)), DerefOf (Index (PWRG, 0x02)), XOr (
+                            DerefOf (Index (PWRG, 0x03)), 0x01))
                     }
                 }
 
-                TBPE = 0x00
-                LDIS = 0x01
-                LDIS = 0x00
+                Store (0x00, TBPE) /* External reference */
+                Store (0x01, LDIS) /* External reference */
+                Store (0x00, LDIS) /* External reference */
                 If (WKEN)
                 {
-                    If ((DerefOf (WAKG [0x00]) != 0x00))
+                    If (LNotEqual (DerefOf (Index (WAKG, 0x00)), 0x00))
                     {
-                        If ((DerefOf (WAKG [0x00]) == 0x01))
+                        If (LEqual (DerefOf (Index (WAKG, 0x00)), 0x01))
                         {
-                            \_SB.SGOV (DerefOf (WAKG [0x02]), DerefOf (WAKG [0x03]))
-                            \_SB.SHPO (DerefOf (WAKG [0x02]), 0x00)
+                            \_SB.SGOV (DerefOf (Index (WAKG, 0x02)), DerefOf (Index (WAKG, 0x03)))
+                            \_SB.SHPO (DerefOf (Index (WAKG, 0x02)), 0x00)
                         }
 
-                        If ((DerefOf (WAKG [0x00]) == 0x02))
+                        If (LEqual (DerefOf (Index (WAKG, 0x00)), 0x02))
                         {
-                            \_SB.PCI0.GEXP.SGEP (DerefOf (WAKG [0x01]), DerefOf (WAKG [0x02]), DerefOf (
-                                WAKG [0x03]))
+                            \_SB.PCI0.GEXP.SGEP (DerefOf (Index (WAKG, 0x01)), DerefOf (Index (WAKG, 0x02)), DerefOf (
+                                Index (WAKG, 0x03)))
                         }
                     }
                 }

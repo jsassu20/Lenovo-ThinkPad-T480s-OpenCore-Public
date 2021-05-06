@@ -3,9 +3,9 @@
  * AML/ASL+ Disassembler version 20200925 (64-bit version)
  * Copyright (c) 2000 - 2020 Intel Corporation
  * 
- * Disassembling to symbolic ASL+ operators
+ * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of SSDT11.aml, Sun May  2 11:05:07 2021
+ * Disassembly of SSDT11.aml, Thu May  6 01:10:51 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
@@ -46,9 +46,9 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "Wwan", 0x00000001)
     {
         Method (M2PC, 1, Serialized)
         {
-            Local0 = \_SB.PCI0.GPCB ()
-            Local0 += ((Arg0 & 0x001F0000) >> One)
-            Local0 += ((Arg0 & 0x07) << 0x0C)
+            Store (\_SB.PCI0.GPCB (), Local0)
+            Add (Local0, ShiftRight (And (Arg0, 0x001F0000), One), Local0)
+            Add (Local0, ShiftLeft (And (Arg0, 0x07), 0x0C), Local0)
             Return (Local0)
         }
 
@@ -62,10 +62,10 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "Wwan", 0x00000001)
                 SBUS,   8
             }
 
-            Local0 = \_SB.PCI0.GPCB ()
-            Local0 += ((Arg0 & 0x001F0000) >> One)
-            Local0 += ((Arg0 & 0x07) << 0x0C)
-            Local0 += (SBUS << 0x14)
+            Store (\_SB.PCI0.GPCB (), Local0)
+            Add (Local0, ShiftRight (And (Arg0, 0x001F0000), One), Local0)
+            Add (Local0, ShiftLeft (And (Arg0, 0x07), 0x0C), Local0)
+            Add (Local0, ShiftLeft (SBUS, 0x14), Local0)
             Return (Local0)
         }
 
@@ -92,21 +92,21 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "Wwan", 0x00000001)
                     MNSL,   16
                 }
 
-                Local0 = \_SB.GPC0 (\WGUR)
-                Local0 &= 0xFFFFFFFFFFFFFEFF
+                Store (\_SB.GPC0 (\WGUR), Local0)
+                And (Local0, 0xFFFFFFFFFFFFFEFF, Local0)
                 \_SB.SPC0 (\WGUR, Local0)
                 Sleep (0xC8)
                 Notify (\_SB.PCI0.RP04.PXSX, One) // Device Check
-                Local0 |= 0x0100
+                Or (Local0, 0x0100, Local0)
                 \_SB.SPC0 (\WGUR, Local0)
                 Sleep (0xC8)
-                If ((NEXP == Zero))
+                If (LEqual (NEXP, Zero))
                 {
-                    DCTL = \WDCT /* External reference */
-                    LCTL = \WLCT /* External reference */
-                    DCT2 = \WDC2 /* External reference */
-                    MXSL = \WMXS /* External reference */
-                    MNSL = \WMNS /* External reference */
+                    Store (\WDCT, DCTL) /* \_SB_.PCI0.RP04.PXSX._RST.DCTL */
+                    Store (\WLCT, LCTL) /* \_SB_.PCI0.RP04.PXSX._RST.LCTL */
+                    Store (\WDC2, DCT2) /* \_SB_.PCI0.RP04.PXSX._RST.DCT2 */
+                    Store (\WMXS, MXSL) /* \_SB_.PCI0.RP04.PXSX._RST.MXSL */
+                    Store (\WMNS, MNSL) /* \_SB_.PCI0.RP04.PXSX._RST.MNSL */
                 }
 
                 Notify (\_SB.PCI0.RP04.PXSX, One) // Device Check

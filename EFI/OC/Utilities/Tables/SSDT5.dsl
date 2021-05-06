@@ -3,9 +3,9 @@
  * AML/ASL+ Disassembler version 20200925 (64-bit version)
  * Copyright (c) 2000 - 2020 Intel Corporation
  * 
- * Disassembling to symbolic ASL+ operators
+ * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of SSDT5.aml, Sun May  2 11:05:07 2021
+ * Disassembly of SSDT5.aml, Thu May  6 01:10:51 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
@@ -135,7 +135,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLD0
+            Store (\PLD0, PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS01._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS01._PLD.PLDP */
         }
     }
@@ -158,7 +158,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLD1
+            Store (\PLD1, PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS02._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS02._PLD.PLDP */
         }
     }
@@ -181,7 +181,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLDI
+            Store (\PLDI, PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS03._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS03._PLD.PLDP */
         }
     }
@@ -204,7 +204,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLD3
+            Store (\PLD3, PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS04._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS04._PLD.PLDP */
         }
     }
@@ -232,7 +232,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLDI
+            Store (\PLDI, PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS05._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS05._PLD.PLDP */
         }
     }
@@ -255,7 +255,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLDI
+            Store (\PLDI, PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS06._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS06._PLD.PLDP */
         }
     }
@@ -278,7 +278,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLDI
+            Store (\PLDI, PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS07._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS07._PLD.PLDP */
         }
     }
@@ -306,7 +306,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLDI
+            Store (\PLDI, PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS08._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS08._PLD.PLDP */
         }
     }
@@ -329,7 +329,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLDI
+            Store (\PLDI, PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS09._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS09._PLD.PLDP */
         }
     }
@@ -352,7 +352,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLDI
+            Store (\PLDI, PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS10._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.HS10._PLD.PLDP */
         }
     }
@@ -375,7 +375,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLD0
+            Store (\PLD0, PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS01._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS01._PLD.PLDP */
         }
     }
@@ -398,7 +398,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLD1
+            Store (\PLD1, PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS02._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS02._PLD.PLDP */
         }
     }
@@ -421,7 +421,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLDI
+            Store (\PLDI, PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS03._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS03._PLD.PLDP */
         }
     }
@@ -444,7 +444,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLD3
+            Store (\PLD3, PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS04._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS04._PLD.PLDP */
         }
     }
@@ -467,7 +467,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLDI
+            Store (\PLDI, PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS05._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS05._PLD.PLDP */
         }
     }
@@ -490,7 +490,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
         Method (_PLD, 0, Serialized)  // _PLD: Physical Location of Device
         {
             Name (PLDP, Buffer (0x10){})
-            PLDP = \PLDI
+            Store (\PLDI, PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS06._PLD.PLDP */
             Return (PLDP) /* \_SB_.PCI0.XHC_.RHUB.SS06._PLD.PLDP */
         }
     }
@@ -555,12 +555,12 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
     {
         Method (PS0X, 0, Serialized)
         {
-            \_SB.PCI0.XHC.USPP = 0x00
+            Store (0x00, \_SB.PCI0.XHC.USPP)
         }
 
         Method (PS2X, 0, Serialized)
         {
-            OperationRegion (XHCM, SystemMemory, (ToInteger (MEMB) & 0xFFFFFFFFFFFF0000), 0x0600)
+            OperationRegion (XHCM, SystemMemory, And (ToInteger (MEMB), 0xFFFFFFFFFFFF0000), 0x0600)
             Field (XHCM, DWordAcc, NoLock, Preserve)
             {
                 Offset (0x02), 
@@ -575,19 +575,19 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
                 SP01,   1
             }
 
-            If ((XHCV == 0xFFFF))
+            If (LEqual (XHCV, 0xFFFF))
             {
                 Return (Zero)
             }
 
-            If (((HP01 == 0x00) && (SP00 == 0x00)))
+            If (LAnd (LEqual (HP01, 0x00), LEqual (SP00, 0x00)))
             {
-                \_SB.PCI0.XHC.USPP |= 0x02
+                Or (\_SB.PCI0.XHC.USPP, 0x02, \_SB.PCI0.XHC.USPP)
             }
 
-            If (((HP02 == 0x00) && (SP01 == 0x00)))
+            If (LAnd (LEqual (HP02, 0x00), LEqual (SP01, 0x00)))
             {
-                \_SB.PCI0.XHC.USPP |= 0x04
+                Or (\_SB.PCI0.XHC.USPP, 0x04, \_SB.PCI0.XHC.USPP)
             }
         }
 
@@ -658,13 +658,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
             Method (_SDD, 1, NotSerialized)  // _SDD: Set Device Data
             {
                 ADBG ("PRT0: _SDD")
-                DIP0 = 0x00
-                If ((SizeOf (Arg0) == 0x0200))
+                Store (0x00, DIP0) /* \_SB_.PCI0.SAT0.PRT0.DIP0 */
+                If (LEqual (SizeOf (Arg0), 0x0200))
                 {
                     CreateWordField (Arg0, 0x9C, M078)
-                    If ((\DPP0 && (M078 & 0x08)))
+                    If (LAnd (\DPP0, And (M078, 0x08)))
                     {
-                        DIP0 = 0x01
+                        Store (0x01, DIP0) /* \_SB_.PCI0.SAT0.PRT0.DIP0 */
                     }
 
                     CreateByteField (Arg0, 0x9D, BFDS)
@@ -679,8 +679,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
                 ADBG ("PRT0: _GTF")
                 If (DIP0)
                 {
-                    If ((((DVS0 == 0x01) && ((FDEV & 0x01) == 0x01)) && 
-                        ((FDRP & 0x80) == 0x80)))
+                    If (LAnd (LAnd (LEqual (DVS0, 0x01), LEqual (And (FDEV, 0x01), 0x01)), 
+                        LEqual (And (FDRP, 0x80), 0x80)))
                     {
                         Return (HQTF) /* \_SB_.PCI0.SAT0.PRT0.HQTF */
                     }
@@ -689,8 +689,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
                         Return (HPTF) /* \_SB_.PCI0.SAT0.PRT0.HPTF */
                     }
                 }
-                ElseIf ((((DVS0 == 0x01) && ((FDEV & 0x01) == 
-                    0x01)) && ((FDRP & 0x80) == 0x80)))
+                ElseIf (LAnd (LAnd (LEqual (DVS0, 0x01), LEqual (And (FDEV, 0x01), 
+                    0x01)), LEqual (And (FDRP, 0x80), 0x80)))
                 {
                     Return (HETF) /* \_SB_.PCI0.SAT0.PRT0.HETF */
                 }
@@ -761,13 +761,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
             Method (_SDD, 1, NotSerialized)  // _SDD: Set Device Data
             {
                 ADBG ("PRT1: _SDD")
-                DIP0 = 0x00
-                If ((SizeOf (Arg0) == 0x0200))
+                Store (0x00, DIP0) /* \_SB_.PCI0.SAT0.PRT1.DIP0 */
+                If (LEqual (SizeOf (Arg0), 0x0200))
                 {
                     CreateWordField (Arg0, 0x9C, M078)
-                    If ((\DPP1 && (M078 & 0x08)))
+                    If (LAnd (\DPP1, And (M078, 0x08)))
                     {
-                        DIP0 = 0x01
+                        Store (0x01, DIP0) /* \_SB_.PCI0.SAT0.PRT1.DIP0 */
                     }
 
                     CreateByteField (Arg0, 0x9D, BFDS)
@@ -782,8 +782,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
                 ADBG ("PRT1: _GTF")
                 If (DIP0)
                 {
-                    If ((((DVS1 == 0x01) && ((FDEV & 0x01) == 0x01)) && 
-                        ((FDRP & 0x80) == 0x80)))
+                    If (LAnd (LAnd (LEqual (DVS1, 0x01), LEqual (And (FDEV, 0x01), 0x01)), 
+                        LEqual (And (FDRP, 0x80), 0x80)))
                     {
                         Return (HQTF) /* \_SB_.PCI0.SAT0.PRT1.HQTF */
                     }
@@ -792,8 +792,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
                         Return (HPTF) /* \_SB_.PCI0.SAT0.PRT1.HPTF */
                     }
                 }
-                ElseIf ((((DVS1 == 0x01) && ((FDEV & 0x01) == 
-                    0x01)) && ((FDRP & 0x80) == 0x80)))
+                ElseIf (LAnd (LAnd (LEqual (DVS1, 0x01), LEqual (And (FDEV, 0x01), 
+                    0x01)), LEqual (And (FDRP, 0x80), 0x80)))
                 {
                     Return (HETF) /* \_SB_.PCI0.SAT0.PRT1.HETF */
                 }
@@ -864,13 +864,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
             Method (_SDD, 1, NotSerialized)  // _SDD: Set Device Data
             {
                 ADBG ("PRT2: _SDD")
-                DIP0 = 0x00
-                If ((SizeOf (Arg0) == 0x0200))
+                Store (0x00, DIP0) /* \_SB_.PCI0.SAT0.PRT2.DIP0 */
+                If (LEqual (SizeOf (Arg0), 0x0200))
                 {
                     CreateWordField (Arg0, 0x9C, M078)
-                    If ((\DPP2 && (M078 & 0x08)))
+                    If (LAnd (\DPP2, And (M078, 0x08)))
                     {
-                        DIP0 = 0x01
+                        Store (0x01, DIP0) /* \_SB_.PCI0.SAT0.PRT2.DIP0 */
                     }
 
                     CreateByteField (Arg0, 0x9D, BFDS)
@@ -885,8 +885,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
                 ADBG ("PRT2: _GTF")
                 If (DIP0)
                 {
-                    If ((((DVS2 == 0x01) && ((FDEV & 0x01) == 0x01)) && 
-                        ((FDRP & 0x80) == 0x80)))
+                    If (LAnd (LAnd (LEqual (DVS2, 0x01), LEqual (And (FDEV, 0x01), 0x01)), 
+                        LEqual (And (FDRP, 0x80), 0x80)))
                     {
                         Return (HQTF) /* \_SB_.PCI0.SAT0.PRT2.HQTF */
                     }
@@ -895,8 +895,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
                         Return (HPTF) /* \_SB_.PCI0.SAT0.PRT2.HPTF */
                     }
                 }
-                ElseIf ((((DVS2 == 0x01) && ((FDEV & 0x01) == 
-                    0x01)) && ((FDRP & 0x80) == 0x80)))
+                ElseIf (LAnd (LAnd (LEqual (DVS2, 0x01), LEqual (And (FDEV, 0x01), 
+                    0x01)), LEqual (And (FDRP, 0x80), 0x80)))
                 {
                     Return (HETF) /* \_SB_.PCI0.SAT0.PRT2.HETF */
                 }
@@ -967,13 +967,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
             Method (_SDD, 1, NotSerialized)  // _SDD: Set Device Data
             {
                 ADBG ("PRT3: _SDD")
-                DIP0 = 0x00
-                If ((SizeOf (Arg0) == 0x0200))
+                Store (0x00, DIP0) /* \_SB_.PCI0.SAT0.PRT3.DIP0 */
+                If (LEqual (SizeOf (Arg0), 0x0200))
                 {
                     CreateWordField (Arg0, 0x9C, M078)
-                    If ((\DPP3 && (M078 & 0x08)))
+                    If (LAnd (\DPP3, And (M078, 0x08)))
                     {
-                        DIP0 = 0x01
+                        Store (0x01, DIP0) /* \_SB_.PCI0.SAT0.PRT3.DIP0 */
                     }
 
                     CreateByteField (Arg0, 0x9D, BFDS)
@@ -988,8 +988,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
                 ADBG ("PRT3: _GTF")
                 If (DIP0)
                 {
-                    If ((((DVS3 == 0x01) && ((FDEV & 0x01) == 0x01)) && 
-                        ((FDRP & 0x80) == 0x80)))
+                    If (LAnd (LAnd (LEqual (DVS3, 0x01), LEqual (And (FDEV, 0x01), 0x01)), 
+                        LEqual (And (FDRP, 0x80), 0x80)))
                     {
                         Return (HQTF) /* \_SB_.PCI0.SAT0.PRT3.HQTF */
                     }
@@ -998,8 +998,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
                         Return (HPTF) /* \_SB_.PCI0.SAT0.PRT3.HPTF */
                     }
                 }
-                ElseIf ((((DVS3 == 0x01) && ((FDEV & 0x01) == 
-                    0x01)) && ((FDRP & 0x80) == 0x80)))
+                ElseIf (LAnd (LAnd (LEqual (DVS3, 0x01), LEqual (And (FDEV, 0x01), 
+                    0x01)), LEqual (And (FDRP, 0x80), 0x80)))
                 {
                     Return (HETF) /* \_SB_.PCI0.SAT0.PRT3.HETF */
                 }
@@ -1068,13 +1068,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "ProjSsdt", 0x00000010)
             Method (_SDD, 1, NotSerialized)  // _SDD: Set Device Data
             {
                 ADBG ("PRT4: _SDD")
-                DIP0 = 0x00
-                If ((SizeOf (Arg0) == 0x0200))
+                Store (0x00, DIP0) /* \_SB_.PCI0.SAT0.PRT4.DIP0 */
+                If (LEqual (SizeOf (Arg0), 0x0200))
                 {
                     CreateWordField (Arg0, 0x9C, M078)
-                    If ((\DPP4 && (M078 & 0x08)))
+                    If (LAnd (\DPP4, And (M078, 0x08)))
                     {
-                        DIP0 = 0x01
+                        Store (0x01, DIP0) /* \_SB_.PCI0.SAT0.PRT4.DIP0 */
                     }
                 }
             }

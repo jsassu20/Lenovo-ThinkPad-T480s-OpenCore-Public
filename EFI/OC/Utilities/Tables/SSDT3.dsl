@@ -3,9 +3,9 @@
  * AML/ASL+ Disassembler version 20200925 (64-bit version)
  * Copyright (c) 2000 - 2020 Intel Corporation
  * 
- * Disassembling to symbolic ASL+ operators
+ * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of SSDT3.aml, Sun May  2 11:05:07 2021
+ * Disassembly of SSDT3.aml, Thu May  6 01:10:51 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
@@ -45,8 +45,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "PerfTune", 0x00001000)
             Method (GACI, 0, NotSerialized)
             {
                 Name (RPKG, Package (0x02){})
-                RPKG [Zero] = Zero
-                If ((XTUB != Zero))
+                Store (Zero, Index (RPKG, Zero))
+                If (LNotEqual (XTUB, Zero))
                 {
                     ADBG ("XTUB")
                     ADBG (XTUB)
@@ -59,13 +59,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "PerfTune", 0x00001000)
                     }
 
                     Name (TEMP, Buffer (XTUS){})
-                    TEMP = XBUF /* \_SB_.PTMD.GACI.XBUF */
-                    RPKG [One] = TEMP /* \_SB_.PTMD.GACI.TEMP */
+                    Store (XBUF, TEMP) /* \_SB_.PTMD.GACI.TEMP */
+                    Store (TEMP, Index (RPKG, One))
                 }
                 Else
                 {
                     ADBG ("XTUB ZERO")
-                    RPKG [One] = Zero
+                    Store (Zero, Index (RPKG, One))
                 }
 
                 Return (RPKG) /* \_SB_.PTMD.GACI.RPKG */
@@ -73,7 +73,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "PerfTune", 0x00001000)
 
             Method (GDSV, 1, Serialized)
             {
-                If ((Arg0 == 0x05))
+                If (LEqual (Arg0, 0x05))
                 {
                     Return (Package (0x02)
                     {
@@ -97,10 +97,10 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "PerfTune", 0x00001000)
                     })
                 }
 
-                If ((Arg0 == 0x13))
+                If (LEqual (Arg0, 0x13))
                 {
                     ADBG ("DDR MULT")
-                    If ((DDRF == One))
+                    If (LEqual (DDRF, One))
                     {
                         ADBG ("DDR 1")
                         Return (Package (0x02)
@@ -149,7 +149,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "PerfTune", 0x00001000)
                     ADBG ("DDR EXIT")
                 }
 
-                If ((Arg0 == 0x0B))
+                If (LEqual (Arg0, 0x0B))
                 {
                     Return (Package (0x02)
                     {
@@ -172,7 +172,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "PerfTune", 0x00001000)
                     })
                 }
 
-                If ((Arg0 == 0x49))
+                If (LEqual (Arg0, 0x49))
                 {
                     Return (Package (0x02)
                     {
@@ -194,7 +194,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "PerfTune", 0x00001000)
 
             Method (GXDV, 1, Serialized)
             {
-                If ((XMPB != Zero))
+                If (LNotEqual (XMPB, Zero))
                 {
                     OperationRegion (XMPN, SystemMemory, XMPB, SIZE)
                     Field (XMPN, ByteAcc, NoLock, Preserve)
@@ -203,19 +203,19 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "PerfTune", 0x00001000)
                         XMP2,   576
                     }
 
-                    If ((Arg0 == One))
+                    If (LEqual (Arg0, One))
                     {
                         Name (XP_1, Package (0x02){})
-                        XP_1 [Zero] = Zero
-                        XP_1 [One] = XMP1 /* \_SB_.PTMD.GXDV.XMP1 */
+                        Store (Zero, Index (XP_1, Zero))
+                        Store (XMP1, Index (XP_1, One))
                         Return (XP_1) /* \_SB_.PTMD.GXDV.XP_1 */
                     }
 
-                    If ((Arg0 == 0x02))
+                    If (LEqual (Arg0, 0x02))
                     {
                         Name (XP_2, Package (0x02){})
-                        XP_2 [Zero] = Zero
-                        XP_2 [One] = XMP2 /* \_SB_.PTMD.GXDV.XMP2 */
+                        Store (Zero, Index (XP_2, Zero))
+                        Store (XMP2, Index (XP_2, One))
                         Return (XP_2) /* \_SB_.PTMD.GXDV.XP_2 */
                     }
                 }
@@ -294,7 +294,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "PerfTune", 0x00001000)
             })
             Method (TSDD, 0, NotSerialized)
             {
-                If ((XTUS == Zero))
+                If (LEqual (XTUS, Zero))
                 {
                     Return (Zero)
                 }
@@ -303,32 +303,32 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "PerfTune", 0x00001000)
                 {
                     If (\TSOD)
                     {
-                        TMP1 [0x02] = \_TZ.TZ01._TMP ()
+                        Store (\_TZ.TZ01._TMP (), Index (TMP1, 0x02))
                         Return (TMP1) /* \_SB_.PTMD.TMP1 */
                     }
                     Else
                     {
-                        TMP2 [0x02] = \_TZ.TZ01._TMP ()
+                        Store (\_TZ.TZ01._TMP (), Index (TMP2, 0x02))
                         Return (TMP2) /* \_SB_.PTMD.TMP2 */
                     }
                 }
                 Else
                 {
-                    TMP3 [0x02] = \_TZ.TZ01._TMP ()
+                    Store (\_TZ.TZ01._TMP (), Index (TMP3, 0x02))
                     Return (TMP3) /* \_SB_.PTMD.TMP3 */
                 }
             }
 
             Method (FSDD, 0, NotSerialized)
             {
-                If ((XTUS == Zero))
+                If (LEqual (XTUS, Zero))
                 {
                     Return (Zero)
                 }
 
                 If (\ECON)
                 {
-                    RPMV [0x02] = \_SB.PCI0.LPCB.H_EC.ECRD (RefOf (\_SB.PCI0.LPCB.H_EC.CFSP))
+                    Store (\_SB.PCI0.LPCB.H_EC.ECRD (RefOf (\_SB.PCI0.LPCB.H_EC.CFSP)), Index (RPMV, 0x02))
                 }
 
                 Return (RPMV) /* \_SB_.PTMD.RPMV */

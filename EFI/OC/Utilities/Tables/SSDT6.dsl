@@ -3,9 +3,9 @@
  * AML/ASL+ Disassembler version 20200925 (64-bit version)
  * Copyright (c) 2000 - 2020 Intel Corporation
  * 
- * Disassembling to symbolic ASL+ operators
+ * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of SSDT6.aml, Sun May  2 11:05:07 2021
+ * Disassembly of SSDT6.aml, Thu May  6 01:10:51 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
@@ -177,13 +177,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         Name (HW2, Zero)
         Method (_PDC, 1, Serialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = CPDC (Arg0)
+            Store (CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, Serialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -196,9 +196,9 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, REVS)
             CreateDWordField (Arg0, 0x04, SIZE)
-            Local0 = SizeOf (Arg0)
-            Local1 = (Local0 - 0x08)
-            CreateField (Arg0, 0x40, (Local1 * 0x08), TEMP)
+            Store (SizeOf (Arg0), Local0)
+            Store (Subtract (Local0, 0x08), Local1)
+            CreateField (Arg0, 0x40, Multiply (Local1, 0x08), TEMP)
             Concatenate (STS0, TEMP, Local2)
             Return (COSC (ToUUID ("4077a616-290c-47be-9ebd-d87058713953") /* Unknown UUID */, REVS, SIZE, Local2))
         }
@@ -222,34 +222,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
             CreateDWordField (UID0, 0x04, EID1)
             CreateDWordField (UID0, 0x08, EID2)
             CreateDWordField (UID0, 0x0C, EID3)
-            If (!(((IID0 == EID0) && (IID1 == EID1)) && ((
-                IID2 == EID2) && (IID3 == EID3))))
+            If (LNot (LAnd (LAnd (LEqual (IID0, EID0), LEqual (IID1, EID1)), LAnd (LEqual (
+                IID2, EID2), LEqual (IID3, EID3)))))
             {
-                STS0 = 0x06
+                Store (0x06, STS0) /* \_PR_.PR00.COSC.STS0 */
                 Return (Arg3)
             }
 
-            If ((Arg1 != One))
+            If (LNotEqual (Arg1, One))
             {
-                STS0 = 0x0A
+                Store (0x0A, STS0) /* \_PR_.PR00.COSC.STS0 */
                 Return (Arg3)
             }
 
-            If (!(Arg2 >= 0x02))
+            If (LNot (LGreaterEqual (Arg2, 0x02)))
             {
-                STS0 = 0x02
+                Store (0x02, STS0) /* \_PR_.PR00.COSC.STS0 */
                 Return (Arg3)
             }
 
-            If (~(STS0 & One))
+            If (Not (And (STS0, One)))
             {
-                If ((CAP0 & 0x2000))
+                If (And (CAP0, 0x2000))
                 {
-                    \_PR.HDCE = Zero
+                    Store (Zero, \_PR.HDCE)
                 }
                 Else
                 {
-                    IOB2 = 0x28
+                    Store (0x28, IOB2) /* \_PR_.PR00.IOB2 */
                 }
             }
 
@@ -260,70 +260,70 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, STS0)
             CreateDWordField (Arg0, 0x04, CAP0)
-            If (((STS0 == 0x06) || (STS0 == 0x0A)))
+            If (LOr (LEqual (STS0, 0x06), LEqual (STS0, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((STS0 & One))
+            If (And (STS0, One))
             {
-                CAP0 &= 0x0BFF
+                And (CAP0, 0x0BFF, CAP0) /* \_PR_.PR00.GCAP.CAP0 */
                 Return (Zero)
             }
 
-            PC00 = ((PC00 & 0x7FFFFFFF) | CAP0) /* \_PR_.PR00.GCAP.CAP0 */
-            If ((CFGD & 0x7A))
+            Or (And (PC00, 0x7FFFFFFF), CAP0, PC00) /* \PC00 */
+            If (And (CFGD, 0x7A))
             {
-                If ((((CFGD & 0x0200) && (PC00 & 0x18)) && !
-                    (SDTL & 0x02)))
+                If (LAnd (LAnd (And (CFGD, 0x0200), And (PC00, 0x18)), LNot (
+                    And (SDTL, 0x02))))
                 {
-                    SDTL |= 0x02
-                    OperationRegion (CST0, SystemMemory, DerefOf (SSDT [0x07]), DerefOf (SSDT [0x08]))
+                    Or (SDTL, 0x02, SDTL) /* \SDTL */
+                    OperationRegion (CST0, SystemMemory, DerefOf (Index (SSDT, 0x07)), DerefOf (Index (SSDT, 0x08)))
                     Load (CST0, HC0) /* \_PR_.PR00.HC0_ */
                 }
             }
 
-            If (((CFGD & One) && !(SDTL & 0x08)))
+            If (LAnd (And (CFGD, One), LNot (And (SDTL, 0x08))))
             {
-                SDTL |= 0x08
-                OperationRegion (IST0, SystemMemory, DerefOf (SSDT [One]), DerefOf (SSDT [0x02]))
+                Or (SDTL, 0x08, SDTL) /* \SDTL */
+                OperationRegion (IST0, SystemMemory, DerefOf (Index (SSDT, One)), DerefOf (Index (SSDT, 0x02)))
                 Load (IST0, HI0) /* \_PR_.PR00.HI0_ */
             }
 
-            If ((OSYS >= 0x07DF))
+            If (LGreaterEqual (OSYS, 0x07DF))
             {
-                If (((CFGD & 0x00400000) && !(SDTL & 0x40)))
+                If (LAnd (And (CFGD, 0x00400000), LNot (And (SDTL, 0x40))))
                 {
-                    If ((\_SB.OSCP & 0x40))
+                    If (And (\_SB.OSCP, 0x40))
                     {
-                        SDTL |= 0x40
-                        OperationRegion (HWP0, SystemMemory, DerefOf (SSDT [0x0D]), DerefOf (SSDT [0x0E]))
+                        Or (SDTL, 0x40, SDTL) /* \SDTL */
+                        OperationRegion (HWP0, SystemMemory, DerefOf (Index (SSDT, 0x0D)), DerefOf (Index (SSDT, 0x0E)))
                         Load (HWP0, HW0) /* \_PR_.PR00.HW0_ */
-                        If ((CFGD & 0x00800000))
+                        If (And (CFGD, 0x00800000))
                         {
-                            OperationRegion (HWPL, SystemMemory, DerefOf (SSDT [0x13]), DerefOf (SSDT [0x14]))
+                            OperationRegion (HWPL, SystemMemory, DerefOf (Index (SSDT, 0x13)), DerefOf (Index (SSDT, 0x14)))
                             Load (HWPL, HW2) /* \_PR_.PR00.HW2_ */
                         }
                     }
 
-                    If ((\_SB.OSCP & 0x20))
+                    If (And (\_SB.OSCP, 0x20))
                     {
-                        If (!(\_SB.OSCP & 0x40))
+                        If (LNot (And (\_SB.OSCP, 0x40)))
                         {
-                            HWPV = Zero
+                            Store (Zero, HWPV) /* \_PR_.HWPV */
                         }
                     }
 
-                    If ((\_SB.OSCP & 0x40))
+                    If (And (\_SB.OSCP, 0x40))
                     {
-                        HWPV = 0x02
+                        Store (0x02, HWPV) /* \_PR_.HWPV */
                     }
                 }
             }
 
-            If (!(PC00 & 0x1000))
+            If (LNot (And (PC00, 0x1000)))
             {
-                IOB2 = 0x27
+                Store (0x27, IOB2) /* \_PR_.PR00.IOB2 */
             }
 
             Return (Zero)
@@ -337,13 +337,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         Name (HW1, Zero)
         Method (_PDC, 1, Serialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, Serialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -352,65 +352,65 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST01)
             CreateDWordField (Arg0, 0x04, CP01)
-            If (((ST01 == 0x06) || (ST01 == 0x0A)))
+            If (LOr (LEqual (ST01, 0x06), LEqual (ST01, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST01 & One))
+            If (And (ST01, One))
             {
-                CP01 &= 0x0BFF
+                And (CP01, 0x0BFF, CP01) /* \_PR_.PR01.GCAP.CP01 */
                 Return (Zero)
             }
 
-            PC01 = ((PC01 & 0x7FFFFFFF) | CP01) /* \_PR_.PR01.GCAP.CP01 */
-            If (((PC01 & 0x09) == 0x09))
+            Or (And (PC01, 0x7FFFFFFF), CP01, PC01) /* \PC01 */
+            If (LEqual (And (PC01, 0x09), 0x09))
             {
                 APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 HWPT ()
             }
 
-            If ((PC01 & 0x18))
+            If (And (PC01, 0x18))
             {
                 APCT ()
             }
 
-            PC00 = PC01 /* \PC01 */
+            Store (PC01, PC00) /* \PC00 */
             Return (Zero)
         }
 
         Method (APCT, 0, Serialized)
         {
-            If (((CFGD & 0x7A) && !(SDTL & 0x20)))
+            If (LAnd (And (CFGD, 0x7A), LNot (And (SDTL, 0x20))))
             {
-                SDTL |= 0x20
-                OperationRegion (CST1, SystemMemory, DerefOf (SSDT [0x0A]), DerefOf (SSDT [0x0B]))
+                Or (SDTL, 0x20, SDTL) /* \SDTL */
+                OperationRegion (CST1, SystemMemory, DerefOf (Index (SSDT, 0x0A)), DerefOf (Index (SSDT, 0x0B)))
                 Load (CST1, HC1) /* \_PR_.PR01.HC1_ */
             }
         }
 
         Method (APPT, 0, Serialized)
         {
-            If (((CFGD & One) && !(SDTL & 0x10)))
+            If (LAnd (And (CFGD, One), LNot (And (SDTL, 0x10))))
             {
-                SDTL |= 0x10
-                OperationRegion (IST1, SystemMemory, DerefOf (SSDT [0x04]), DerefOf (SSDT [0x05]))
+                Or (SDTL, 0x10, SDTL) /* \SDTL */
+                OperationRegion (IST1, SystemMemory, DerefOf (Index (SSDT, 0x04)), DerefOf (Index (SSDT, 0x05)))
                 Load (IST1, HI1) /* \_PR_.PR01.HI1_ */
             }
         }
 
         Method (HWPT, 0, Serialized)
         {
-            If ((OSYS >= 0x07DF))
+            If (LGreaterEqual (OSYS, 0x07DF))
             {
-                If (((CFGD & 0x00400000) && !(SDTL & 0x80)))
+                If (LAnd (And (CFGD, 0x00400000), LNot (And (SDTL, 0x80))))
                 {
-                    SDTL |= 0x80
-                    OperationRegion (HWP1, SystemMemory, DerefOf (SSDT [0x10]), DerefOf (SSDT [0x11]))
+                    Or (SDTL, 0x80, SDTL) /* \SDTL */
+                    OperationRegion (HWP1, SystemMemory, DerefOf (Index (SSDT, 0x10)), DerefOf (Index (SSDT, 0x11)))
                     Load (HWP1, HW1) /* \_PR_.PR01.HW1_ */
                 }
             }
@@ -421,13 +421,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -436,34 +436,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST02)
             CreateDWordField (Arg0, 0x04, CP02)
-            If (((ST02 == 0x06) || (ST02 == 0x0A)))
+            If (LOr (LEqual (ST02, 0x06), LEqual (ST02, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST02 & One))
+            If (And (ST02, One))
             {
-                CP02 &= 0x0BFF
+                And (CP02, 0x0BFF, CP02) /* \_PR_.PR02.GCAP.CP02 */
                 Return (Zero)
             }
 
-            PC02 = ((PC02 & 0x7FFFFFFF) | CP02) /* \_PR_.PR02.GCAP.CP02 */
-            If (((PC02 & 0x09) == 0x09))
+            Or (And (PC02, 0x7FFFFFFF), CP02, PC02) /* \PC02 */
+            If (LEqual (And (PC02, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC02 & 0x18))
+            If (And (PC02, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC02 /* \PC02 */
+            Store (PC02, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -472,13 +472,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -487,34 +487,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST03)
             CreateDWordField (Arg0, 0x04, CP03)
-            If (((ST03 == 0x06) || (ST03 == 0x0A)))
+            If (LOr (LEqual (ST03, 0x06), LEqual (ST03, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST03 & One))
+            If (And (ST03, One))
             {
-                CP03 &= 0x0BFF
+                And (CP03, 0x0BFF, CP03) /* \_PR_.PR03.GCAP.CP03 */
                 Return (Zero)
             }
 
-            PC03 = ((PC03 & 0x7FFFFFFF) | CP03) /* \_PR_.PR03.GCAP.CP03 */
-            If (((PC03 & 0x09) == 0x09))
+            Or (And (PC03, 0x7FFFFFFF), CP03, PC03) /* \PC03 */
+            If (LEqual (And (PC03, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC03 & 0x18))
+            If (And (PC03, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC03 /* \PC03 */
+            Store (PC03, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -523,13 +523,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -538,34 +538,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST04)
             CreateDWordField (Arg0, 0x04, CP04)
-            If (((ST04 == 0x06) || (ST04 == 0x0A)))
+            If (LOr (LEqual (ST04, 0x06), LEqual (ST04, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST04 & One))
+            If (And (ST04, One))
             {
-                CP04 &= 0x0BFF
+                And (CP04, 0x0BFF, CP04) /* \_PR_.PR04.GCAP.CP04 */
                 Return (Zero)
             }
 
-            PC04 = ((PC04 & 0x7FFFFFFF) | CP04) /* \_PR_.PR04.GCAP.CP04 */
-            If (((PC04 & 0x09) == 0x09))
+            Or (And (PC04, 0x7FFFFFFF), CP04, PC04) /* \PC04 */
+            If (LEqual (And (PC04, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC04 & 0x18))
+            If (And (PC04, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC04 /* \PC04 */
+            Store (PC04, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -574,13 +574,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -589,34 +589,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST05)
             CreateDWordField (Arg0, 0x04, CP05)
-            If (((ST05 == 0x06) || (ST05 == 0x0A)))
+            If (LOr (LEqual (ST05, 0x06), LEqual (ST05, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST05 & One))
+            If (And (ST05, One))
             {
-                CP05 &= 0x0BFF
+                And (CP05, 0x0BFF, CP05) /* \_PR_.PR05.GCAP.CP05 */
                 Return (Zero)
             }
 
-            PC05 = ((PC05 & 0x7FFFFFFF) | CP05) /* \_PR_.PR05.GCAP.CP05 */
-            If (((PC05 & 0x09) == 0x09))
+            Or (And (PC05, 0x7FFFFFFF), CP05, PC05) /* \PC05 */
+            If (LEqual (And (PC05, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC05 & 0x18))
+            If (And (PC05, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC05 /* \PC05 */
+            Store (PC05, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -625,13 +625,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -640,34 +640,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST06)
             CreateDWordField (Arg0, 0x04, CP06)
-            If (((ST06 == 0x06) || (ST06 == 0x0A)))
+            If (LOr (LEqual (ST06, 0x06), LEqual (ST06, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST06 & One))
+            If (And (ST06, One))
             {
-                CP06 &= 0x0BFF
+                And (CP06, 0x0BFF, CP06) /* \_PR_.PR06.GCAP.CP06 */
                 Return (Zero)
             }
 
-            PC06 = ((PC06 & 0x7FFFFFFF) | CP06) /* \_PR_.PR06.GCAP.CP06 */
-            If (((PC06 & 0x09) == 0x09))
+            Or (And (PC06, 0x7FFFFFFF), CP06, PC06) /* \PC06 */
+            If (LEqual (And (PC06, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC06 & 0x18))
+            If (And (PC06, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC06 /* \PC06 */
+            Store (PC06, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -676,13 +676,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -691,34 +691,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST07)
             CreateDWordField (Arg0, 0x04, CP07)
-            If (((ST07 == 0x06) || (ST07 == 0x0A)))
+            If (LOr (LEqual (ST07, 0x06), LEqual (ST07, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST07 & One))
+            If (And (ST07, One))
             {
-                CP07 &= 0x0BFF
+                And (CP07, 0x0BFF, CP07) /* \_PR_.PR07.GCAP.CP07 */
                 Return (Zero)
             }
 
-            PC07 = ((PC07 & 0x7FFFFFFF) | CP07) /* \_PR_.PR07.GCAP.CP07 */
-            If (((PC07 & 0x09) == 0x09))
+            Or (And (PC07, 0x7FFFFFFF), CP07, PC07) /* \PC07 */
+            If (LEqual (And (PC07, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC07 & 0x18))
+            If (And (PC07, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC07 /* \PC07 */
+            Store (PC07, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -727,13 +727,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -742,34 +742,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST08)
             CreateDWordField (Arg0, 0x04, CP08)
-            If (((ST08 == 0x06) || (ST08 == 0x0A)))
+            If (LOr (LEqual (ST08, 0x06), LEqual (ST08, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST08 & One))
+            If (And (ST08, One))
             {
-                CP08 &= 0x0BFF
+                And (CP08, 0x0BFF, CP08) /* \_PR_.PR08.GCAP.CP08 */
                 Return (Zero)
             }
 
-            PC08 = ((PC08 & 0x7FFFFFFF) | CP08) /* \_PR_.PR08.GCAP.CP08 */
-            If (((PC08 & 0x09) == 0x09))
+            Or (And (PC08, 0x7FFFFFFF), CP08, PC08) /* \PC08 */
+            If (LEqual (And (PC08, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC08 & 0x18))
+            If (And (PC08, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC08 /* \PC08 */
+            Store (PC08, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -778,13 +778,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -793,34 +793,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST09)
             CreateDWordField (Arg0, 0x04, CP09)
-            If (((ST09 == 0x06) || (ST09 == 0x0A)))
+            If (LOr (LEqual (ST09, 0x06), LEqual (ST09, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST09 & One))
+            If (And (ST09, One))
             {
-                CP09 &= 0x0BFF
+                And (CP09, 0x0BFF, CP09) /* \_PR_.PR09.GCAP.CP09 */
                 Return (Zero)
             }
 
-            PC09 = ((PC09 & 0x7FFFFFFF) | CP09) /* \_PR_.PR09.GCAP.CP09 */
-            If (((PC09 & 0x09) == 0x09))
+            Or (And (PC09, 0x7FFFFFFF), CP09, PC09) /* \PC09 */
+            If (LEqual (And (PC09, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC09 & 0x18))
+            If (And (PC09, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC09 /* \PC09 */
+            Store (PC09, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -829,13 +829,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -844,34 +844,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST10)
             CreateDWordField (Arg0, 0x04, CP10)
-            If (((ST10 == 0x06) || (ST10 == 0x0A)))
+            If (LOr (LEqual (ST10, 0x06), LEqual (ST10, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST10 & One))
+            If (And (ST10, One))
             {
-                CP10 = (ST10 & 0x0BFF)
+                And (ST10, 0x0BFF, CP10) /* \_PR_.PR10.GCAP.CP10 */
                 Return (Zero)
             }
 
-            PC10 = ((PC10 & 0x7FFFFFFF) | CP10) /* \_PR_.PR10.GCAP.CP10 */
-            If (((PC10 & 0x09) == 0x09))
+            Or (And (PC10, 0x7FFFFFFF), CP10, PC10) /* \PC10 */
+            If (LEqual (And (PC10, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC10 & 0x18))
+            If (And (PC10, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC10 /* \PC10 */
+            Store (PC10, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -880,13 +880,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -895,34 +895,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST11)
             CreateDWordField (Arg0, 0x04, CP11)
-            If (((ST11 == 0x06) || (ST11 == 0x0A)))
+            If (LOr (LEqual (ST11, 0x06), LEqual (ST11, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST11 & One))
+            If (And (ST11, One))
             {
-                CP11 = (ST11 & 0x0BFF)
+                And (ST11, 0x0BFF, CP11) /* \_PR_.PR11.GCAP.CP11 */
                 Return (Zero)
             }
 
-            PC11 = ((PC11 & 0x7FFFFFFF) | CP11) /* \_PR_.PR11.GCAP.CP11 */
-            If (((PC11 & 0x09) == 0x09))
+            Or (And (PC11, 0x7FFFFFFF), CP11, PC11) /* \PC11 */
+            If (LEqual (And (PC11, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC11 & 0x18))
+            If (And (PC11, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC11 /* \PC11 */
+            Store (PC11, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -931,13 +931,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -946,34 +946,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST12)
             CreateDWordField (Arg0, 0x04, CP12)
-            If (((ST12 == 0x06) || (ST12 == 0x0A)))
+            If (LOr (LEqual (ST12, 0x06), LEqual (ST12, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST12 & One))
+            If (And (ST12, One))
             {
-                CP12 = (ST12 & 0x0BFF)
+                And (ST12, 0x0BFF, CP12) /* \_PR_.PR12.GCAP.CP12 */
                 Return (Zero)
             }
 
-            PC12 = ((PC12 & 0x7FFFFFFF) | CP12) /* \_PR_.PR12.GCAP.CP12 */
-            If (((PC12 & 0x09) == 0x09))
+            Or (And (PC12, 0x7FFFFFFF), CP12, PC12) /* \PC12 */
+            If (LEqual (And (PC12, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC12 & 0x18))
+            If (And (PC12, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC12 /* \PC12 */
+            Store (PC12, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -982,13 +982,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -997,34 +997,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST13)
             CreateDWordField (Arg0, 0x04, CP13)
-            If (((ST13 == 0x06) || (ST13 == 0x0A)))
+            If (LOr (LEqual (ST13, 0x06), LEqual (ST13, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST13 & One))
+            If (And (ST13, One))
             {
-                CP13 = (ST13 & 0x0BFF)
+                And (ST13, 0x0BFF, CP13) /* \_PR_.PR13.GCAP.CP13 */
                 Return (Zero)
             }
 
-            PC13 = ((PC13 & 0x7FFFFFFF) | CP13) /* \_PR_.PR13.GCAP.CP13 */
-            If (((PC13 & 0x09) == 0x09))
+            Or (And (PC13, 0x7FFFFFFF), CP13, PC13) /* \PC13 */
+            If (LEqual (And (PC13, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC13 & 0x18))
+            If (And (PC13, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC13 /* \PC13 */
+            Store (PC13, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -1033,13 +1033,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -1048,34 +1048,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST14)
             CreateDWordField (Arg0, 0x04, CP14)
-            If (((ST14 == 0x06) || (ST14 == 0x0A)))
+            If (LOr (LEqual (ST14, 0x06), LEqual (ST14, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST14 & One))
+            If (And (ST14, One))
             {
-                CP14 = (ST14 & 0x0BFF)
+                And (ST14, 0x0BFF, CP14) /* \_PR_.PR14.GCAP.CP14 */
                 Return (Zero)
             }
 
-            PC14 = ((PC14 & 0x7FFFFFFF) | CP14) /* \_PR_.PR14.GCAP.CP14 */
-            If (((PC14 & 0x09) == 0x09))
+            Or (And (PC14, 0x7FFFFFFF), CP14, PC14) /* \PC14 */
+            If (LEqual (And (PC14, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC14 & 0x18))
+            If (And (PC14, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC14 /* \PC14 */
+            Store (PC14, PC00) /* \PC00 */
             Return (Zero)
         }
     }
@@ -1084,13 +1084,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
     {
         Method (_PDC, 1, NotSerialized)  // _PDC: Processor Driver Capabilities
         {
-            Local0 = \_PR.PR00.CPDC (Arg0)
+            Store (\_PR.PR00.CPDC (Arg0), Local0)
             GCAP (Local0)
         }
 
         Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
         {
-            Local0 = \_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3)
+            Store (\_PR.PR00.COSC (Arg0, Arg1, Arg2, Arg3), Local0)
             GCAP (Local0)
             Return (Local0)
         }
@@ -1099,34 +1099,34 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CpuSsdt", 0x00003000)
         {
             CreateDWordField (Arg0, Zero, ST15)
             CreateDWordField (Arg0, 0x04, CP15)
-            If (((ST15 == 0x06) || (ST15 == 0x0A)))
+            If (LOr (LEqual (ST15, 0x06), LEqual (ST15, 0x0A)))
             {
                 Return (Zero)
             }
 
-            If ((ST15 & One))
+            If (And (ST15, One))
             {
-                CP15 = (ST15 & 0x0BFF)
+                And (ST15, 0x0BFF, CP15) /* \_PR_.PR15.GCAP.CP15 */
                 Return (Zero)
             }
 
-            PC15 = ((PC15 & 0x7FFFFFFF) | CP15) /* \_PR_.PR15.GCAP.CP15 */
-            If (((PC15 & 0x09) == 0x09))
+            Or (And (PC15, 0x7FFFFFFF), CP15, PC15) /* \PC15 */
+            If (LEqual (And (PC15, 0x09), 0x09))
             {
                 \_PR.PR01.APPT ()
             }
 
-            If ((\_SB.OSCP & 0x20))
+            If (And (\_SB.OSCP, 0x20))
             {
                 \_PR.PR01.HWPT ()
             }
 
-            If ((PC15 & 0x18))
+            If (And (PC15, 0x18))
             {
                 \_PR.PR01.APCT ()
             }
 
-            PC00 = PC15 /* \PC15 */
+            Store (PC15, PC00) /* \PC00 */
             Return (Zero)
         }
     }

@@ -3,9 +3,9 @@
  * AML/ASL+ Disassembler version 20200925 (64-bit version)
  * Copyright (c) 2000 - 2020 Intel Corporation
  * 
- * Disassembling to symbolic ASL+ operators
+ * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of SSDT12.aml, Sun May  2 11:05:07 2021
+ * Disassembly of SSDT12.aml, Thu May  6 01:10:51 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
@@ -56,7 +56,7 @@ DefinitionBlock ("", "SSDT", 2, "PmRef", "Cpu0Ist", 0x00003000)
         })
         Method (_PSS, 0, NotSerialized)  // _PSS: Performance Supported States
         {
-            If ((\_SB.OSCP & 0x0400))
+            If (And (\_SB.OSCP, 0x0400))
             {
                 Return (TPSS) /* \_PR_.PR00.TPSS */
             }
@@ -483,14 +483,14 @@ DefinitionBlock ("", "SSDT", 2, "PmRef", "Cpu0Ist", 0x00003000)
         Name (PSDF, Zero)
         Method (_PSD, 0, NotSerialized)  // _PSD: Power State Dependencies
         {
-            If (!PSDF)
+            If (LNot (PSDF))
             {
-                DerefOf (HPSD [Zero]) [0x04] = TCNT /* External reference */
-                DerefOf (SPSD [Zero]) [0x04] = TCNT /* External reference */
-                PSDF = Ones
+                Store (TCNT, Index (DerefOf (Index (HPSD, Zero)), 0x04))
+                Store (TCNT, Index (DerefOf (Index (SPSD, Zero)), 0x04))
+                Store (Ones, PSDF) /* \_PR_.PR00.PSDF */
             }
 
-            If ((PC00 & 0x0800))
+            If (And (PC00, 0x0800))
             {
                 Return (HPSD) /* \_PR_.PR00.HPSD */
             }

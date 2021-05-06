@@ -3,9 +3,9 @@
  * AML/ASL+ Disassembler version 20200925 (64-bit version)
  * Copyright (c) 2000 - 2020 Intel Corporation
  * 
- * Disassembling to symbolic ASL+ operators
+ * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of SSDT8.aml, Sun May  2 11:05:07 2021
+ * Disassembly of SSDT8.aml, Thu May  6 01:10:51 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
@@ -51,7 +51,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "UsbCTabl", 0x00001000)
                 Name (_ADR, Zero)  // _ADR: Address
                 Method (_PLD, 0, NotSerialized)  // _PLD: Physical Location of Device
                 {
-                    If ((USTC == One))
+                    If (LEqual (USTC, One))
                     {
                         Return (\_SB.PCI0.RP05.PXSX.TBDU.XHC.RHUB.TPLD (One, One))
                     }
@@ -63,7 +63,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "UsbCTabl", 0x00001000)
                 Name (_ADR, One)  // _ADR: Address
                 Method (_PLD, 0, NotSerialized)  // _PLD: Physical Location of Device
                 {
-                    If ((USTC == One))
+                    If (LEqual (USTC, One))
                     {
                         Return (\_SB.PCI0.RP05.PXSX.TBDU.XHC.RHUB.TPLD (Zero, 0x02))
                     }
@@ -73,15 +73,15 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "UsbCTabl", 0x00001000)
             Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
             {
                 CreateDWordField (CRS, \_SB.UBTC._Y48._BAS, CBAS)  // _BAS: Base Address
-                CBAS = UBCB /* External reference */
+                Store (UBCB, CBAS) /* \_SB_.UBTC._CRS.CBAS */
                 Return (CRS) /* \_SB_.UBTC.CRS_ */
             }
 
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                If (((OSYS >= 0x07DF) && (TBTS == One)))
+                If (LAnd (LGreaterEqual (OSYS, 0x07DF), LEqual (TBTS, One)))
                 {
-                    If ((USTC == One))
+                    If (LEqual (USTC, One))
                     {
                         Return (0x0F)
                     }
@@ -147,42 +147,42 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "UsbCTabl", 0x00001000)
             Method (ECWR, 0, Serialized)
             {
                 Acquire (UBSY, 0xFFFF)
-                Local0 = Buffer (0x25){}
-                Local0 [Zero] = 0x0A
-                Local0 [One] = Zero
-                Local0 [0x02] = 0x02
-                Local0 [0x03] = 0x06
-                Local0 [0x04] = MGO0 /* \_SB_.UBTC.MGO0 */
-                Local0 [0x05] = MGO1 /* \_SB_.UBTC.MGO1 */
-                Local0 [0x06] = MGO2 /* \_SB_.UBTC.MGO2 */
-                Local0 [0x07] = MGO3 /* \_SB_.UBTC.MGO3 */
-                Local0 [0x08] = MGO4 /* \_SB_.UBTC.MGO4 */
-                Local0 [0x09] = MGO5 /* \_SB_.UBTC.MGO5 */
-                Local0 [0x0A] = MGO6 /* \_SB_.UBTC.MGO6 */
-                Local0 [0x0B] = MGO7 /* \_SB_.UBTC.MGO7 */
-                Local0 [0x0C] = MGO8 /* \_SB_.UBTC.MGO8 */
-                Local0 [0x0D] = MGO9 /* \_SB_.UBTC.MGO9 */
-                Local0 [0x0E] = MGOA /* \_SB_.UBTC.MGOA */
-                Local0 [0x0F] = MGOB /* \_SB_.UBTC.MGOB */
-                Local0 [0x10] = MGOC /* \_SB_.UBTC.MGOC */
-                Local0 [0x11] = MGOD /* \_SB_.UBTC.MGOD */
-                Local0 [0x12] = MGOE /* \_SB_.UBTC.MGOE */
-                Local0 [0x13] = MGOF /* \_SB_.UBTC.MGOF */
-                Local0 [0x24] = 0x10
+                Store (Buffer (0x25){}, Local0)
+                Store (0x0A, Index (Local0, Zero))
+                Store (Zero, Index (Local0, One))
+                Store (0x02, Index (Local0, 0x02))
+                Store (0x06, Index (Local0, 0x03))
+                Store (MGO0, Index (Local0, 0x04))
+                Store (MGO1, Index (Local0, 0x05))
+                Store (MGO2, Index (Local0, 0x06))
+                Store (MGO3, Index (Local0, 0x07))
+                Store (MGO4, Index (Local0, 0x08))
+                Store (MGO5, Index (Local0, 0x09))
+                Store (MGO6, Index (Local0, 0x0A))
+                Store (MGO7, Index (Local0, 0x0B))
+                Store (MGO8, Index (Local0, 0x0C))
+                Store (MGO9, Index (Local0, 0x0D))
+                Store (MGOA, Index (Local0, 0x0E))
+                Store (MGOB, Index (Local0, 0x0F))
+                Store (MGOC, Index (Local0, 0x10))
+                Store (MGOD, Index (Local0, 0x11))
+                Store (MGOE, Index (Local0, 0x12))
+                Store (MGOF, Index (Local0, 0x13))
+                Store (0x10, Index (Local0, 0x24))
                 \_SB.PCI0.LPCB.EC.HKEY.MHPF (Local0)
-                Local0 [Zero] = 0x0A
-                Local0 [One] = Zero
-                Local0 [0x02] = 0x02
-                Local0 [0x03] = 0x04
-                Local0 [0x04] = CTL0 /* \_SB_.UBTC.CTL0 */
-                Local0 [0x05] = CTL1 /* \_SB_.UBTC.CTL1 */
-                Local0 [0x06] = CTL2 /* \_SB_.UBTC.CTL2 */
-                Local0 [0x07] = CTL3 /* \_SB_.UBTC.CTL3 */
-                Local0 [0x08] = CTL4 /* \_SB_.UBTC.CTL4 */
-                Local0 [0x09] = CTL5 /* \_SB_.UBTC.CTL5 */
-                Local0 [0x0A] = CTL6 /* \_SB_.UBTC.CTL6 */
-                Local0 [0x0B] = CTL7 /* \_SB_.UBTC.CTL7 */
-                Local0 [0x24] = 0x08
+                Store (0x0A, Index (Local0, Zero))
+                Store (Zero, Index (Local0, One))
+                Store (0x02, Index (Local0, 0x02))
+                Store (0x04, Index (Local0, 0x03))
+                Store (CTL0, Index (Local0, 0x04))
+                Store (CTL1, Index (Local0, 0x05))
+                Store (CTL2, Index (Local0, 0x06))
+                Store (CTL3, Index (Local0, 0x07))
+                Store (CTL4, Index (Local0, 0x08))
+                Store (CTL5, Index (Local0, 0x09))
+                Store (CTL6, Index (Local0, 0x0A))
+                Store (CTL7, Index (Local0, 0x0B))
+                Store (0x08, Index (Local0, 0x24))
                 \_SB.PCI0.LPCB.EC.HKEY.MHPF (Local0)
                 Release (UBSY)
             }
@@ -190,39 +190,39 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "UsbCTabl", 0x00001000)
             Method (ECRD, 0, Serialized)
             {
                 Acquire (UBSY, 0xFFFF)
-                Local0 = Buffer (0x25){}
-                Local0 [Zero] = 0x0B
-                Local0 [One] = Zero
-                Local0 [0x02] = 0x02
-                Local0 [0x03] = 0x05
-                Local0 [0x24] = 0x10
-                Local1 = \_SB.PCI0.LPCB.EC.HKEY.MHPF (Local0)
-                MGI0 = DerefOf (Local1 [0x04])
-                MGI1 = DerefOf (Local1 [0x05])
-                MGI2 = DerefOf (Local1 [0x06])
-                MGI3 = DerefOf (Local1 [0x07])
-                MGI4 = DerefOf (Local1 [0x08])
-                MGI5 = DerefOf (Local1 [0x09])
-                MGI6 = DerefOf (Local1 [0x0A])
-                MGI7 = DerefOf (Local1 [0x0B])
-                MGI8 = DerefOf (Local1 [0x0C])
-                MGI9 = DerefOf (Local1 [0x0D])
-                MGIA = DerefOf (Local1 [0x0E])
-                MGIB = DerefOf (Local1 [0x0F])
-                MGIC = DerefOf (Local1 [0x10])
-                MGID = DerefOf (Local1 [0x11])
-                MGIE = DerefOf (Local1 [0x12])
-                MGIF = DerefOf (Local1 [0x13])
-                Local0 [Zero] = 0x0B
-                Local0 [One] = Zero
-                Local0 [0x02] = 0x02
-                Local0 [0x03] = 0x03
-                Local0 [0x24] = 0x04
-                Local1 = \_SB.PCI0.LPCB.EC.HKEY.MHPF (Local0)
-                CCI0 = DerefOf (Local1 [0x04])
-                CCI1 = DerefOf (Local1 [0x05])
-                CCI2 = DerefOf (Local1 [0x06])
-                CCI3 = DerefOf (Local1 [0x07])
+                Store (Buffer (0x25){}, Local0)
+                Store (0x0B, Index (Local0, Zero))
+                Store (Zero, Index (Local0, One))
+                Store (0x02, Index (Local0, 0x02))
+                Store (0x05, Index (Local0, 0x03))
+                Store (0x10, Index (Local0, 0x24))
+                Store (\_SB.PCI0.LPCB.EC.HKEY.MHPF (Local0), Local1)
+                Store (DerefOf (Index (Local1, 0x04)), MGI0) /* \_SB_.UBTC.MGI0 */
+                Store (DerefOf (Index (Local1, 0x05)), MGI1) /* \_SB_.UBTC.MGI1 */
+                Store (DerefOf (Index (Local1, 0x06)), MGI2) /* \_SB_.UBTC.MGI2 */
+                Store (DerefOf (Index (Local1, 0x07)), MGI3) /* \_SB_.UBTC.MGI3 */
+                Store (DerefOf (Index (Local1, 0x08)), MGI4) /* \_SB_.UBTC.MGI4 */
+                Store (DerefOf (Index (Local1, 0x09)), MGI5) /* \_SB_.UBTC.MGI5 */
+                Store (DerefOf (Index (Local1, 0x0A)), MGI6) /* \_SB_.UBTC.MGI6 */
+                Store (DerefOf (Index (Local1, 0x0B)), MGI7) /* \_SB_.UBTC.MGI7 */
+                Store (DerefOf (Index (Local1, 0x0C)), MGI8) /* \_SB_.UBTC.MGI8 */
+                Store (DerefOf (Index (Local1, 0x0D)), MGI9) /* \_SB_.UBTC.MGI9 */
+                Store (DerefOf (Index (Local1, 0x0E)), MGIA) /* \_SB_.UBTC.MGIA */
+                Store (DerefOf (Index (Local1, 0x0F)), MGIB) /* \_SB_.UBTC.MGIB */
+                Store (DerefOf (Index (Local1, 0x10)), MGIC) /* \_SB_.UBTC.MGIC */
+                Store (DerefOf (Index (Local1, 0x11)), MGID) /* \_SB_.UBTC.MGID */
+                Store (DerefOf (Index (Local1, 0x12)), MGIE) /* \_SB_.UBTC.MGIE */
+                Store (DerefOf (Index (Local1, 0x13)), MGIF) /* \_SB_.UBTC.MGIF */
+                Store (0x0B, Index (Local0, Zero))
+                Store (Zero, Index (Local0, One))
+                Store (0x02, Index (Local0, 0x02))
+                Store (0x03, Index (Local0, 0x03))
+                Store (0x04, Index (Local0, 0x24))
+                Store (\_SB.PCI0.LPCB.EC.HKEY.MHPF (Local0), Local1)
+                Store (DerefOf (Index (Local1, 0x04)), CCI0) /* \_SB_.UBTC.CCI0 */
+                Store (DerefOf (Index (Local1, 0x05)), CCI1) /* \_SB_.UBTC.CCI1 */
+                Store (DerefOf (Index (Local1, 0x06)), CCI2) /* \_SB_.UBTC.CCI2 */
+                Store (DerefOf (Index (Local1, 0x07)), CCI3) /* \_SB_.UBTC.CCI3 */
                 Release (UBSY)
             }
 
@@ -235,7 +235,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "UsbCTabl", 0x00001000)
 
             Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
             {
-                If ((Arg0 == ToUUID ("6f8398c2-7ca4-11e4-ad36-631042b5008f") /* Unknown UUID */))
+                If (LEqual (Arg0, ToUUID ("6f8398c2-7ca4-11e4-ad36-631042b5008f") /* Unknown UUID */))
                 {
                     Switch (ToInteger (Arg2))
                     {

@@ -3,9 +3,9 @@
  * AML/ASL+ Disassembler version 20200925 (64-bit version)
  * Copyright (c) 2000 - 2020 Intel Corporation
  * 
- * Disassembling to symbolic ASL+ operators
+ * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of SSDT1.aml, Sun May  2 11:05:07 2021
+ * Disassembly of SSDT1.aml, Thu May  6 01:10:51 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
@@ -339,7 +339,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                If ((DPTF == One))
+                If (LEqual (DPTF, One))
                 {
                     Return (0x0F)
                 }
@@ -445,88 +445,88 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
             Method (IDSP, 0, Serialized)
             {
                 Name (TMPI, Zero)
-                If (((\DPPP == 0x02) && CondRefOf (DP2P)))
+                If (LAnd (LEqual (\DPPP, 0x02), CondRefOf (DP2P)))
                 {
-                    TMPP [TMPI] = DerefOf (DP2P [Zero])
-                    TMPI++
+                    Store (DerefOf (Index (DP2P, Zero)), Index (TMPP, TMPI))
+                    Increment (TMPI)
                 }
 
-                If (((\DPPP == One) && CondRefOf (DPSP)))
+                If (LAnd (LEqual (\DPPP, One), CondRefOf (DPSP)))
                 {
-                    TMPP [TMPI] = DerefOf (DPSP [Zero])
-                    TMPI++
+                    Store (DerefOf (Index (DPSP, Zero)), Index (TMPP, TMPI))
+                    Increment (TMPI)
                 }
 
-                If (((\DPAP == One) && CondRefOf (DASP)))
+                If (LAnd (LEqual (\DPAP, One), CondRefOf (DASP)))
                 {
-                    TMPP [TMPI] = DerefOf (DASP [Zero])
-                    TMPI++
+                    Store (DerefOf (Index (DASP, Zero)), Index (TMPP, TMPI))
+                    Increment (TMPI)
                 }
 
-                If (((\DPAP == 0x02) && CondRefOf (DA2P)))
+                If (LAnd (LEqual (\DPAP, 0x02), CondRefOf (DA2P)))
                 {
-                    TMPP [TMPI] = DerefOf (DA2P [Zero])
-                    TMPI++
+                    Store (DerefOf (Index (DA2P, Zero)), Index (TMPP, TMPI))
+                    Increment (TMPI)
                 }
 
-                If (((\DPCP == One) && CondRefOf (DCSP)))
+                If (LAnd (LEqual (\DPCP, One), CondRefOf (DCSP)))
                 {
-                    TMPP [TMPI] = DerefOf (DCSP [Zero])
-                    TMPI++
+                    Store (DerefOf (Index (DCSP, Zero)), Index (TMPP, TMPI))
+                    Increment (TMPI)
                 }
 
-                If (((\DCMP == One) && CondRefOf (DMSP)))
+                If (LAnd (LEqual (\DCMP, One), CondRefOf (DMSP)))
                 {
-                    TMPP [TMPI] = DerefOf (DMSP [Zero])
-                    TMPI++
+                    Store (DerefOf (Index (DMSP, Zero)), Index (TMPP, TMPI))
+                    Increment (TMPI)
                 }
 
                 If (CondRefOf (LPSP))
                 {
-                    If (((\SADE == One) && (\LPMP == One)))
+                    If (LAnd (LEqual (\SADE, One), LEqual (\LPMP, One)))
                     {
-                        TMPP [TMPI] = DerefOf (LPSP [Zero])
-                        TMPI++
+                        Store (DerefOf (Index (LPSP, Zero)), Index (TMPP, TMPI))
+                        Increment (TMPI)
                     }
                 }
 
                 If (CondRefOf (CTSP))
                 {
-                    If (((\SADE == One) && (\CTDP == One)))
+                    If (LAnd (LEqual (\SADE, One), LEqual (\CTDP, One)))
                     {
-                        TMPP [TMPI] = DerefOf (CTSP [Zero])
-                        TMPI++
+                        Store (DerefOf (Index (CTSP, Zero)), Index (TMPP, TMPI))
+                        Increment (TMPI)
                     }
                 }
 
-                If (((\PBPE == One) && CondRefOf (POBP)))
+                If (LAnd (LEqual (\PBPE, One), CondRefOf (POBP)))
                 {
-                    TMPP [TMPI] = DerefOf (POBP [Zero])
-                    TMPI++
+                    Store (DerefOf (Index (POBP, Zero)), Index (TMPP, TMPI))
+                    Increment (TMPI)
                 }
 
-                If (((\_PR.HDCE == One) && CondRefOf (HDCP)))
+                If (LAnd (LEqual (\_PR.HDCE, One), CondRefOf (HDCP)))
                 {
-                    TMPP [TMPI] = DerefOf (HDCP [Zero])
-                    TMPI++
+                    Store (DerefOf (Index (HDCP, Zero)), Index (TMPP, TMPI))
+                    Increment (TMPI)
                 }
 
-                If (((\APPE == One) && CondRefOf (DAPP)))
+                If (LAnd (LEqual (\APPE, One), CondRefOf (DAPP)))
                 {
-                    TMPP [TMPI] = DerefOf (DAPP [Zero])
-                    TMPI++
+                    Store (DerefOf (Index (DAPP, Zero)), Index (TMPP, TMPI))
+                    Increment (TMPI)
                 }
 
-                If (((\VSPE == One) && CondRefOf (DVSP)))
+                If (LAnd (LEqual (\VSPE, One), CondRefOf (DVSP)))
                 {
-                    TMPP [TMPI] = DerefOf (DVSP [Zero])
-                    TMPI++
+                    Store (DerefOf (Index (DVSP, Zero)), Index (TMPP, TMPI))
+                    Increment (TMPI)
                 }
 
-                If (((\PIDE == One) && CondRefOf (DPID)))
+                If (LAnd (LEqual (\PIDE, One), CondRefOf (DPID)))
                 {
-                    TMPP [TMPI] = DerefOf (DPID [Zero])
-                    TMPI++
+                    Store (DerefOf (Index (DPID, Zero)), Index (TMPP, TMPI))
+                    Increment (TMPI)
                 }
 
                 Return (TMPP) /* \_SB_.IETM.TMPP */
@@ -542,25 +542,25 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
                 })
                 CreateDWordField (Arg3, Zero, STS1)
                 CreateDWordField (Arg3, 0x04, CAP1)
-                If ((CAP1 & One))
+                If (And (CAP1, One))
                 {
-                    If ((DPTE == Zero))
+                    If (LEqual (DPTE, Zero))
                     {
-                        DPTE = One
+                        Store (One, DPTE) /* \_SB_.IETM.DPTE */
                         \_SB.PCI0.LPCB.EC.HKEY.DYTC (0x000F0001)
                         If (\_SB.PCI0.LPCB.EC.HKEY.DHKC){}
                     }
                 }
-                ElseIf ((DPTE == One))
+                ElseIf (LEqual (DPTE, One))
                 {
-                    DPTE = Zero
+                    Store (Zero, DPTE) /* \_SB_.IETM.DPTE */
                     \_SB.PCI0.LPCB.EC.HKEY.DYTC (0x01FF)
                     If (\_SB.PCI0.LPCB.EC.HKEY.DHKC){}
                 }
 
                 ADBG (Concatenate ("OSC->DPTE=", ToHexString (DPTE)))
                 IDSP ()
-                NUMP = SizeOf (TMPP)
+                Store (SizeOf (TMPP), NUMP) /* \_SB_.IETM._OSC.NUMP */
                 CreateDWordField (Arg0, Zero, IID0)
                 CreateDWordField (Arg0, 0x04, IID1)
                 CreateDWordField (Arg0, 0x08, IID2)
@@ -571,62 +571,62 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
                 CreateDWordField (UID2, 0x0C, EID3)
                 While (NUMP)
                 {
-                    UID2 = DerefOf (TMPP [(NUMP - One)])
-                    If ((((IID0 == EID0) && (IID1 == EID1)) && ((IID2 == 
-                        EID2) && (IID3 == EID3))))
+                    Store (DerefOf (Index (TMPP, Subtract (NUMP, One))), UID2) /* \_SB_.IETM._OSC.UID2 */
+                    If (LAnd (LAnd (LEqual (IID0, EID0), LEqual (IID1, EID1)), LAnd (LEqual (IID2, 
+                        EID2), LEqual (IID3, EID3))))
                     {
                         Break
                     }
 
-                    NUMP--
+                    Decrement (NUMP)
                 }
 
-                If ((NUMP == Zero))
+                If (LEqual (NUMP, Zero))
                 {
-                    STS1 &= 0xFFFFFF00
-                    STS1 |= 0x06
+                    And (STS1, 0xFFFFFF00, STS1) /* \_SB_.IETM._OSC.STS1 */
+                    Or (STS1, 0x06, STS1) /* \_SB_.IETM._OSC.STS1 */
                     Return (Arg3)
                 }
 
-                If ((Arg1 != One))
+                If (LNotEqual (Arg1, One))
                 {
-                    STS1 &= 0xFFFFFF00
-                    STS1 |= 0x0A
+                    And (STS1, 0xFFFFFF00, STS1) /* \_SB_.IETM._OSC.STS1 */
+                    Or (STS1, 0x0A, STS1) /* \_SB_.IETM._OSC.STS1 */
                     Return (Arg3)
                 }
 
-                If ((Arg2 != 0x02))
+                If (LNotEqual (Arg2, 0x02))
                 {
-                    STS1 &= 0xFFFFFF00
-                    STS1 |= 0x02
+                    And (STS1, 0xFFFFFF00, STS1) /* \_SB_.IETM._OSC.STS1 */
+                    Or (STS1, 0x02, STS1) /* \_SB_.IETM._OSC.STS1 */
                     Return (Arg3)
                 }
 
-                If (((\DPPP == 0x02) && CondRefOf (\_PR.APSV)))
+                If (LAnd (LEqual (\DPPP, 0x02), CondRefOf (\_PR.APSV)))
                 {
-                    If ((PSEM == Zero))
+                    If (LEqual (PSEM, Zero))
                     {
-                        PSEM = One
-                        PTRP = \_PR.APSV /* External reference */
+                        Store (One, PSEM) /* \_SB_.IETM.PSEM */
+                        Store (\_PR.APSV, PTRP) /* \_SB_.IETM.PTRP */
                     }
 
                     If (CondRefOf (DP2P))
                     {
-                        UID2 = DerefOf (DP2P [Zero])
+                        Store (DerefOf (Index (DP2P, Zero)), UID2) /* \_SB_.IETM._OSC.UID2 */
                     }
 
-                    If ((((IID0 == EID0) && (IID1 == EID1)) && ((IID2 == 
-                        EID2) && (IID3 == EID3))))
+                    If (LAnd (LAnd (LEqual (IID0, EID0), LEqual (IID1, EID1)), LAnd (LEqual (IID2, 
+                        EID2), LEqual (IID3, EID3))))
                     {
-                        If (~(STS1 & One))
+                        If (Not (And (STS1, One)))
                         {
-                            If ((CAP1 & One))
+                            If (And (CAP1, One))
                             {
-                                \_PR.APSV = 0x6E
+                                Store (0x6E, \_PR.APSV) /* External reference */
                             }
                             Else
                             {
-                                \_PR.APSV = PTRP /* \_SB_.IETM.PTRP */
+                                Store (PTRP, \_PR.APSV) /* External reference */
                             }
 
                             Notify (\_TZ.THM0, 0x81) // Information Change
@@ -636,31 +636,31 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
                     }
                 }
 
-                If (((\DPPP == One) && CondRefOf (\_PR.APSV)))
+                If (LAnd (LEqual (\DPPP, One), CondRefOf (\_PR.APSV)))
                 {
-                    If ((PSEM == Zero))
+                    If (LEqual (PSEM, Zero))
                     {
-                        PSEM = One
-                        PTRP = \_PR.APSV /* External reference */
+                        Store (One, PSEM) /* \_SB_.IETM.PSEM */
+                        Store (\_PR.APSV, PTRP) /* \_SB_.IETM.PTRP */
                     }
 
                     If (CondRefOf (DPSP))
                     {
-                        UID2 = DerefOf (DPSP [Zero])
+                        Store (DerefOf (Index (DPSP, Zero)), UID2) /* \_SB_.IETM._OSC.UID2 */
                     }
 
-                    If ((((IID0 == EID0) && (IID1 == EID1)) && ((IID2 == 
-                        EID2) && (IID3 == EID3))))
+                    If (LAnd (LAnd (LEqual (IID0, EID0), LEqual (IID1, EID1)), LAnd (LEqual (IID2, 
+                        EID2), LEqual (IID3, EID3))))
                     {
-                        If (~(STS1 & One))
+                        If (Not (And (STS1, One)))
                         {
-                            If ((CAP1 & One))
+                            If (And (CAP1, One))
                             {
-                                \_PR.APSV = 0x6E
+                                Store (0x6E, \_PR.APSV) /* External reference */
                             }
                             Else
                             {
-                                \_PR.APSV = PTRP /* \_SB_.IETM.PTRP */
+                                Store (PTRP, \_PR.APSV) /* External reference */
                             }
 
                             Notify (\_TZ.THM0, 0x81) // Information Change
@@ -670,31 +670,31 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
                     }
                 }
 
-                If (((\PIDE == One) && CondRefOf (\_PR.APSV)))
+                If (LAnd (LEqual (\PIDE, One), CondRefOf (\_PR.APSV)))
                 {
-                    If ((PSEM == Zero))
+                    If (LEqual (PSEM, Zero))
                     {
-                        PSEM = One
-                        PTRP = \_PR.APSV /* External reference */
+                        Store (One, PSEM) /* \_SB_.IETM.PSEM */
+                        Store (\_PR.APSV, PTRP) /* \_SB_.IETM.PTRP */
                     }
 
                     If (CondRefOf (DPID))
                     {
-                        UID2 = DerefOf (DPID [Zero])
+                        Store (DerefOf (Index (DPID, Zero)), UID2) /* \_SB_.IETM._OSC.UID2 */
                     }
 
-                    If ((((IID0 == EID0) && (IID1 == EID1)) && ((IID2 == 
-                        EID2) && (IID3 == EID3))))
+                    If (LAnd (LAnd (LEqual (IID0, EID0), LEqual (IID1, EID1)), LAnd (LEqual (IID2, 
+                        EID2), LEqual (IID3, EID3))))
                     {
-                        If (~(STS1 & One))
+                        If (Not (And (STS1, One)))
                         {
-                            If ((CAP1 & One))
+                            If (And (CAP1, One))
                             {
-                                \_PR.APSV = 0x6E
+                                Store (0x6E, \_PR.APSV) /* External reference */
                             }
                             Else
                             {
-                                \_PR.APSV = PTRP /* \_SB_.IETM.PTRP */
+                                Store (PTRP, \_PR.APSV) /* External reference */
                             }
 
                             Notify (\_TZ.THM0, 0x81) // Information Change
@@ -704,31 +704,31 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
                     }
                 }
 
-                If (((\DPAP == One) && CondRefOf (\_PR.AAC0)))
+                If (LAnd (LEqual (\DPAP, One), CondRefOf (\_PR.AAC0)))
                 {
-                    If ((ASEM == Zero))
+                    If (LEqual (ASEM, Zero))
                     {
-                        ASEM = One
-                        ATRP = \_PR.AAC0 /* External reference */
+                        Store (One, ASEM) /* \_SB_.IETM.ASEM */
+                        Store (\_PR.AAC0, ATRP) /* \_SB_.IETM.ATRP */
                     }
 
                     If (CondRefOf (DASP))
                     {
-                        UID2 = DerefOf (DASP [Zero])
+                        Store (DerefOf (Index (DASP, Zero)), UID2) /* \_SB_.IETM._OSC.UID2 */
                     }
 
-                    If ((((IID0 == EID0) && (IID1 == EID1)) && ((IID2 == 
-                        EID2) && (IID3 == EID3))))
+                    If (LAnd (LAnd (LEqual (IID0, EID0), LEqual (IID1, EID1)), LAnd (LEqual (IID2, 
+                        EID2), LEqual (IID3, EID3))))
                     {
-                        If (~(STS1 & One))
+                        If (Not (And (STS1, One)))
                         {
-                            If ((CAP1 & One))
+                            If (And (CAP1, One))
                             {
-                                \_PR.AAC0 = 0x6E
+                                Store (0x6E, \_PR.AAC0) /* External reference */
                             }
                             Else
                             {
-                                \_PR.AAC0 = ATRP /* \_SB_.IETM.ATRP */
+                                Store (ATRP, \_PR.AAC0) /* External reference */
                             }
 
                             Notify (\_TZ.THM0, 0x81) // Information Change
@@ -738,31 +738,31 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
                     }
                 }
 
-                If (((\DPAP == 0x02) && CondRefOf (\_PR.AAC0)))
+                If (LAnd (LEqual (\DPAP, 0x02), CondRefOf (\_PR.AAC0)))
                 {
-                    If ((ASEM == Zero))
+                    If (LEqual (ASEM, Zero))
                     {
-                        ASEM = One
-                        ATRP = \_PR.AAC0 /* External reference */
+                        Store (One, ASEM) /* \_SB_.IETM.ASEM */
+                        Store (\_PR.AAC0, ATRP) /* \_SB_.IETM.ATRP */
                     }
 
                     If (CondRefOf (DA2P))
                     {
-                        UID2 = DerefOf (DA2P [Zero])
+                        Store (DerefOf (Index (DA2P, Zero)), UID2) /* \_SB_.IETM._OSC.UID2 */
                     }
 
-                    If ((((IID0 == EID0) && (IID1 == EID1)) && ((IID2 == 
-                        EID2) && (IID3 == EID3))))
+                    If (LAnd (LAnd (LEqual (IID0, EID0), LEqual (IID1, EID1)), LAnd (LEqual (IID2, 
+                        EID2), LEqual (IID3, EID3))))
                     {
-                        If (~(STS1 & One))
+                        If (Not (And (STS1, One)))
                         {
-                            If ((CAP1 & One))
+                            If (And (CAP1, One))
                             {
-                                \_PR.AAC0 = 0x6E
+                                Store (0x6E, \_PR.AAC0) /* External reference */
                             }
                             Else
                             {
-                                \_PR.AAC0 = ATRP /* \_SB_.IETM.ATRP */
+                                Store (ATRP, \_PR.AAC0) /* External reference */
                             }
 
                             Notify (\_TZ.THM0, 0x81) // Information Change
@@ -772,31 +772,31 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
                     }
                 }
 
-                If (((\DPCP == One) && CondRefOf (\_PR.ACRT)))
+                If (LAnd (LEqual (\DPCP, One), CondRefOf (\_PR.ACRT)))
                 {
-                    If ((YSEM == Zero))
+                    If (LEqual (YSEM, Zero))
                     {
-                        YSEM = One
-                        YTRP = \_PR.ACRT /* External reference */
+                        Store (One, YSEM) /* \_SB_.IETM.YSEM */
+                        Store (\_PR.ACRT, YTRP) /* \_SB_.IETM.YTRP */
                     }
 
                     If (CondRefOf (DCSP))
                     {
-                        UID2 = DerefOf (DCSP [Zero])
+                        Store (DerefOf (Index (DCSP, Zero)), UID2) /* \_SB_.IETM._OSC.UID2 */
                     }
 
-                    If ((((IID0 == EID0) && (IID1 == EID1)) && ((IID2 == 
-                        EID2) && (IID3 == EID3))))
+                    If (LAnd (LAnd (LEqual (IID0, EID0), LEqual (IID1, EID1)), LAnd (LEqual (IID2, 
+                        EID2), LEqual (IID3, EID3))))
                     {
-                        If (~(STS1 & One))
+                        If (Not (And (STS1, One)))
                         {
-                            If ((CAP1 & One))
+                            If (And (CAP1, One))
                             {
-                                \_PR.ACRT = 0xD2
+                                Store (0xD2, \_PR.ACRT) /* External reference */
                             }
                             Else
                             {
-                                \_PR.ACRT = YTRP /* \_SB_.IETM.YTRP */
+                                Store (YTRP, \_PR.ACRT) /* External reference */
                             }
 
                             Notify (\_TZ.THM0, 0x81) // Information Change
@@ -811,9 +811,9 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
             Method (KTOC, 1, Serialized)
             {
-                If ((Arg0 > 0x0AAC))
+                If (LGreater (Arg0, 0x0AAC))
                 {
-                    Return (((Arg0 - 0x0AAC) / 0x0A))
+                    Return (Divide (Subtract (Arg0, 0x0AAC), 0x0A, ))
                 }
                 Else
                 {
@@ -823,7 +823,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
             Method (CTOK, 1, Serialized)
             {
-                Return (((Arg0 * 0x0A) + 0x0AAC))
+                Return (Add (Multiply (Arg0, 0x0A), 0x0AAC))
             }
 
             Name (VERS, Zero)
@@ -836,69 +836,69 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
             Method (DSCP, 7, Serialized)
             {
                 Name (CHNG, Zero)
-                If ((Arg0 != Zero))
+                If (LNotEqual (Arg0, Zero))
                 {
                     Return (Zero)
                 }
 
-                If (((Arg1 == Zero) || (Arg1 == One)))
+                If (LOr (LEqual (Arg1, Zero), LEqual (Arg1, One)))
                 {
-                    If ((Arg1 != CTYP))
+                    If (LNotEqual (Arg1, CTYP))
                     {
-                        CHNG = One
-                        CTYP = Arg1
+                        Store (One, CHNG) /* \_SB_.IETM.DSCP.CHNG */
+                        Store (Arg1, CTYP) /* \_SB_.IETM.CTYP */
                     }
                 }
 
-                If (((Arg1 >= Zero) || (Arg1 <= 0x05)))
+                If (LOr (LGreaterEqual (Arg1, Zero), LLessEqual (Arg1, 0x05)))
                 {
-                    If ((Arg2 != ALMT))
+                    If (LNotEqual (Arg2, ALMT))
                     {
-                        CHNG = One
-                        ALMT = Arg2
+                        Store (One, CHNG) /* \_SB_.IETM.DSCP.CHNG */
+                        Store (Arg2, ALMT) /* \_SB_.IETM.ALMT */
                     }
                 }
 
-                If (((Arg1 >= Zero) || (Arg1 <= 0x05)))
+                If (LOr (LGreaterEqual (Arg1, Zero), LLessEqual (Arg1, 0x05)))
                 {
-                    If ((Arg3 != PLMT))
+                    If (LNotEqual (Arg3, PLMT))
                     {
-                        CHNG = One
-                        PLMT = Arg3
+                        Store (One, CHNG) /* \_SB_.IETM.DSCP.CHNG */
+                        Store (Arg3, PLMT) /* \_SB_.IETM.PLMT */
                     }
                 }
 
-                If ((Arg4 != WKLD))
+                If (LNotEqual (Arg4, WKLD))
                 {
-                    CHNG = One
-                    WKLD = Arg4
+                    Store (One, CHNG) /* \_SB_.IETM.DSCP.CHNG */
+                    Store (Arg4, WKLD) /* \_SB_.IETM.WKLD */
                 }
 
-                If ((Arg5 != DSTA))
+                If (LNotEqual (Arg5, DSTA))
                 {
-                    CHNG = One
-                    DSTA = Arg5
+                    Store (One, CHNG) /* \_SB_.IETM.DSCP.CHNG */
+                    Store (Arg5, DSTA) /* \_SB_.IETM.DSTA */
                 }
 
-                If ((Arg6 != RES1))
+                If (LNotEqual (Arg6, RES1))
                 {
-                    CHNG = One
-                    RES1 = Arg6
+                    Store (One, CHNG) /* \_SB_.IETM.DSCP.CHNG */
+                    Store (Arg6, RES1) /* \_SB_.IETM.RES1 */
                 }
 
                 If (CHNG)
                 {
-                    If ((\DPPP == One))
+                    If (LEqual (\DPPP, One))
                     {
                         Notify (\_SB.IETM, 0x83) // Device-Specific Change
                     }
 
-                    If ((\DPPP == 0x02))
+                    If (LEqual (\DPPP, 0x02))
                     {
                         Notify (\_SB.IETM, 0x87) // Device-Specific
                     }
 
-                    If ((\DPAP == One))
+                    If (LEqual (\DPAP, One))
                     {
                         Notify (\_SB.IETM, 0x84) // Reserved
                     }
@@ -935,26 +935,26 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
             })
             Method (ODVP, 0, Serialized)
             {
-                ODVX [Zero] = \ODV0 /* External reference */
-                ODVX [One] = \ODV1 /* External reference */
-                ODVX [0x02] = \ODV2 /* External reference */
-                ODVX [0x03] = \ODV3 /* External reference */
-                ODVX [0x04] = \ODV4 /* External reference */
-                ODVX [0x05] = \ODV5 /* External reference */
-                ODVX [0x06] = \ODV6 /* External reference */
-                ODVX [0x07] = \ODV7 /* External reference */
-                ODVX [0x08] = \ODV8 /* External reference */
-                ODVX [0x09] = \ODV9 /* External reference */
-                ODVX [0x0A] = \ODVA /* External reference */
-                ODVX [0x0B] = \ODVB /* External reference */
-                ODVX [0x0C] = \ODVC /* External reference */
-                ODVX [0x0D] = \ODVD /* External reference */
-                ODVX [0x0E] = \ODVE /* External reference */
-                ODVX [0x0F] = \ODVF /* External reference */
-                ODVX [0x10] = \ODVG /* External reference */
-                ODVX [0x11] = \ODVH /* External reference */
-                ODVX [0x12] = \ODVI /* External reference */
-                ODVX [0x13] = \ODVJ /* External reference */
+                Store (\ODV0, Index (ODVX, Zero))
+                Store (\ODV1, Index (ODVX, One))
+                Store (\ODV2, Index (ODVX, 0x02))
+                Store (\ODV3, Index (ODVX, 0x03))
+                Store (\ODV4, Index (ODVX, 0x04))
+                Store (\ODV5, Index (ODVX, 0x05))
+                Store (\ODV6, Index (ODVX, 0x06))
+                Store (\ODV7, Index (ODVX, 0x07))
+                Store (\ODV8, Index (ODVX, 0x08))
+                Store (\ODV9, Index (ODVX, 0x09))
+                Store (\ODVA, Index (ODVX, 0x0A))
+                Store (\ODVB, Index (ODVX, 0x0B))
+                Store (\ODVC, Index (ODVX, 0x0C))
+                Store (\ODVD, Index (ODVX, 0x0D))
+                Store (\ODVE, Index (ODVX, 0x0E))
+                Store (\ODVF, Index (ODVX, 0x0F))
+                Store (\ODVG, Index (ODVX, 0x10))
+                Store (\ODVH, Index (ODVX, 0x11))
+                Store (\ODVI, Index (ODVX, 0x12))
+                Store (\ODVJ, Index (ODVX, 0x13))
                 Return (ODVX) /* \_SB_.IETM.ODVX */
             }
         }
@@ -964,7 +964,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
     {
         Method (_STA, 0, NotSerialized)  // _STA: Status
         {
-            If ((\SADE == One))
+            If (LEqual (\SADE, One))
             {
                 Return (0x0F)
             }
@@ -974,7 +974,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
             }
         }
 
-        OperationRegion (MBAR, SystemMemory, ((MHBR << 0x0F) + 0x5000), 0x1000)
+        OperationRegion (MBAR, SystemMemory, Add (ShiftLeft (MHBR, 0x0F), 0x5000), 0x1000)
         Field (MBAR, ByteAcc, NoLock, Preserve)
         {
             Offset (0x930), 
@@ -1029,32 +1029,32 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
         Name (XPCC, Zero)
         Method (PPCC, 0, Serialized)
         {
-            If (((XPCC == Zero) && CondRefOf (\_PR.CBMI)))
+            If (LAnd (LEqual (XPCC, Zero), CondRefOf (\_PR.CBMI)))
             {
                 Switch (ToInteger (\_PR.CBMI))
                 {
                     Case (Zero)
                     {
-                        If (((\_PR.CLVL >= One) && (\_PR.CLVL <= 0x03)))
+                        If (LAnd (LGreaterEqual (\_PR.CLVL, One), LLessEqual (\_PR.CLVL, 0x03)))
                         {
                             CPL0 ()
-                            XPCC = One
+                            Store (One, XPCC) /* \_SB_.PCI0.B0D4.XPCC */
                         }
                     }
                     Case (One)
                     {
-                        If (((\_PR.CLVL == 0x02) || (\_PR.CLVL == 0x03)))
+                        If (LOr (LEqual (\_PR.CLVL, 0x02), LEqual (\_PR.CLVL, 0x03)))
                         {
                             CPL1 ()
-                            XPCC = One
+                            Store (One, XPCC) /* \_SB_.PCI0.B0D4.XPCC */
                         }
                     }
                     Case (0x02)
                     {
-                        If ((\_PR.CLVL == 0x03))
+                        If (LEqual (\_PR.CLVL, 0x03))
                         {
                             CPL2 ()
-                            XPCC = One
+                            Store (One, XPCC) /* \_SB_.PCI0.B0D4.XPCC */
                         }
                     }
 
@@ -1092,82 +1092,82 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
             Name (CNVT, Zero)
             Name (PPUU, Zero)
             Name (RMDR, Zero)
-            If ((PWRU == Zero))
+            If (LEqual (PWRU, Zero))
             {
-                PPUU = One
+                Store (One, PPUU) /* \_SB_.PCI0.B0D4.CPNU.PPUU */
             }
             Else
             {
-                PPUU = (PWRU-- << 0x02)
+                ShiftLeft (Decrement (PWRU), 0x02, PPUU) /* \_SB_.PCI0.B0D4.CPNU.PPUU */
             }
 
             Divide (Arg0, PPUU, RMDR, CNVT) /* \_SB_.PCI0.B0D4.CPNU.CNVT */
-            If ((Arg1 == Zero))
+            If (LEqual (Arg1, Zero))
             {
                 Return (CNVT) /* \_SB_.PCI0.B0D4.CPNU.CNVT */
             }
             Else
             {
-                CNVT *= 0x03E8
-                RMDR *= 0x03E8
-                RMDR /= PPUU
-                CNVT += RMDR /* \_SB_.PCI0.B0D4.CPNU.RMDR */
+                Multiply (CNVT, 0x03E8, CNVT) /* \_SB_.PCI0.B0D4.CPNU.CNVT */
+                Multiply (RMDR, 0x03E8, RMDR) /* \_SB_.PCI0.B0D4.CPNU.RMDR */
+                Divide (RMDR, PPUU, , RMDR) /* \_SB_.PCI0.B0D4.CPNU.RMDR */
+                Add (CNVT, RMDR, CNVT) /* \_SB_.PCI0.B0D4.CPNU.CNVT */
                 Return (CNVT) /* \_SB_.PCI0.B0D4.CPNU.CNVT */
             }
         }
 
         Method (CPL0, 0, NotSerialized)
         {
-            \_SB.PCI0.B0D4.NPCC [Zero] = 0x02
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [Zero] = Zero
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [One] = \MPL0 /* External reference */
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x02] = CPNU (\_PR.PL10, One)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x03] = (\_PR.PLW0 * 0x03E8)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x04] = ((\_PR.PLW0 * 0x03E8
-                ) + 0x0FA0)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x05] = PPSZ /* External reference */
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [Zero] = One
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [One] = CPNU (\_PR.PL20, One)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x02] = CPNU (\_PR.PL20, One)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x03] = Zero
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x04] = Zero
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x05] = PPSZ /* External reference */
+            Store (0x02, Index (\_SB.PCI0.B0D4.NPCC, Zero))
+            Store (Zero, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), Zero))
+            Store (\MPL0, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), One))
+            Store (CPNU (\_PR.PL10, One), Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 0x02))
+            Multiply (\_PR.PLW0, 0x03E8, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 0x03))
+            Add (Multiply (\_PR.PLW0, 0x03E8), 0x0FA0, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 
+                0x04))
+            Store (PPSZ, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 0x05))
+            Store (One, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), Zero))
+            Store (CPNU (\_PR.PL20, One), Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), One))
+            Store (CPNU (\_PR.PL20, One), Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x02))
+            Store (Zero, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x03))
+            Store (Zero, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x04))
+            Store (PPSZ, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x05))
         }
 
         Method (CPL1, 0, NotSerialized)
         {
-            \_SB.PCI0.B0D4.NPCC [Zero] = 0x02
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [Zero] = Zero
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [One] = \MPL1 /* External reference */
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x02] = CPNU (\_PR.PL11, One)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x03] = (\_PR.PLW1 * 0x03E8)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x04] = ((\_PR.PLW1 * 0x03E8
-                ) + 0x0FA0)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x05] = PPSZ /* External reference */
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [Zero] = One
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [One] = CPNU (\_PR.PL21, One)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x02] = CPNU (\_PR.PL21, One)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x03] = Zero
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x04] = Zero
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x05] = PPSZ /* External reference */
+            Store (0x02, Index (\_SB.PCI0.B0D4.NPCC, Zero))
+            Store (Zero, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), Zero))
+            Store (\MPL1, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), One))
+            Store (CPNU (\_PR.PL11, One), Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 0x02))
+            Multiply (\_PR.PLW1, 0x03E8, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 0x03))
+            Add (Multiply (\_PR.PLW1, 0x03E8), 0x0FA0, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 
+                0x04))
+            Store (PPSZ, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 0x05))
+            Store (One, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), Zero))
+            Store (CPNU (\_PR.PL21, One), Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), One))
+            Store (CPNU (\_PR.PL21, One), Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x02))
+            Store (Zero, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x03))
+            Store (Zero, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x04))
+            Store (PPSZ, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x05))
         }
 
         Method (CPL2, 0, NotSerialized)
         {
-            \_SB.PCI0.B0D4.NPCC [Zero] = 0x02
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [Zero] = Zero
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [One] = \MPL2 /* External reference */
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x02] = CPNU (\_PR.PL12, One)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x03] = (\_PR.PLW2 * 0x03E8)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x04] = ((\_PR.PLW2 * 0x03E8
-                ) + 0x0FA0)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [One]) [0x05] = PPSZ /* External reference */
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [Zero] = One
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [One] = CPNU (\_PR.PL22, One)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x02] = CPNU (\_PR.PL22, One)
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x03] = Zero
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x04] = Zero
-            DerefOf (\_SB.PCI0.B0D4.NPCC [0x02]) [0x05] = PPSZ /* External reference */
+            Store (0x02, Index (\_SB.PCI0.B0D4.NPCC, Zero))
+            Store (Zero, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), Zero))
+            Store (\MPL2, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), One))
+            Store (CPNU (\_PR.PL12, One), Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 0x02))
+            Multiply (\_PR.PLW2, 0x03E8, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 0x03))
+            Add (Multiply (\_PR.PLW2, 0x03E8), 0x0FA0, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 
+                0x04))
+            Store (PPSZ, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, One)), 0x05))
+            Store (One, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), Zero))
+            Store (CPNU (\_PR.PL22, One), Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), One))
+            Store (CPNU (\_PR.PL22, One), Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x02))
+            Store (Zero, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x03))
+            Store (Zero, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x04))
+            Store (PPSZ, Index (DerefOf (Index (\_SB.PCI0.B0D4.NPCC, 0x02)), 0x05))
         }
 
         Name (LSTM, Zero)
@@ -1176,7 +1176,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
         {
             If (CondRefOf (\_PR.CPPC))
             {
-                \_PR.CPPC = Arg0
+                Store (Arg0, \_PR.CPPC) /* External reference */
             }
 
             Switch (ToInteger (\TCNT))
@@ -1320,46 +1320,46 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
         })
         Method (CLPO, 0, NotSerialized)
         {
-            TLPO [One] = LPOE /* External reference */
+            Store (LPOE, Index (TLPO, One))
             If (CondRefOf (\_PR.PR00._PSS))
             {
-                If ((\_SB.OSCP & 0x0400))
+                If (And (\_SB.OSCP, 0x0400))
                 {
-                    Local1 = SizeOf (\_PR.PR00.TPSS)
+                    Store (SizeOf (\_PR.PR00.TPSS), Local1)
                 }
                 Else
                 {
-                    Local1 = SizeOf (\_PR.PR00.LPSS)
+                    Store (SizeOf (\_PR.PR00.LPSS), Local1)
                 }
             }
             Else
             {
-                Local1 = Zero
+                Store (Zero, Local1)
             }
 
-            If ((LPOP < Local1))
+            If (LLess (LPOP, Local1))
             {
-                TLPO [0x02] = LPOP /* External reference */
+                Store (LPOP, Index (TLPO, 0x02))
             }
             Else
             {
-                Local1--
-                TLPO [0x02] = Local1
+                Decrement (Local1)
+                Store (Local1, Index (TLPO, 0x02))
             }
 
-            TLPO [0x03] = LPOS /* External reference */
-            TLPO [0x04] = LPOW /* External reference */
-            TLPO [0x05] = LPER /* External reference */
+            Store (LPOS, Index (TLPO, 0x03))
+            Store (LPOW, Index (TLPO, 0x04))
+            Store (LPER, Index (TLPO, 0x05))
             Return (TLPO) /* \_SB_.PCI0.B0D4.TLPO */
         }
 
         Method (SPUR, 1, NotSerialized)
         {
-            If ((Arg0 <= \TCNT))
+            If (LLessEqual (Arg0, \TCNT))
             {
-                If ((\_SB.PAGD._STA () == 0x0F))
+                If (LEqual (\_SB.PAGD._STA (), 0x0F))
                 {
-                    \_SB.PAGD._PUR [One] = Arg0
+                    Store (Arg0, Index (\_SB.PAGD._PUR, One))
                     Notify (\_SB.PAGD, 0x80) // Status Change
                 }
             }
@@ -1374,43 +1374,43 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
         })
         Method (PCCC, 0, Serialized)
         {
-            PCCX [Zero] = One
+            Store (One, Index (PCCX, Zero))
             Switch (ToInteger (CPNU (PTDP, Zero)))
             {
                 Case (0x39)
                 {
-                    DerefOf (PCCX [One]) [Zero] = 0xA7F8
-                    DerefOf (PCCX [One]) [One] = 0x00017318
+                    Store (0xA7F8, Index (DerefOf (Index (PCCX, One)), Zero))
+                    Store (0x00017318, Index (DerefOf (Index (PCCX, One)), One))
                 }
                 Case (0x2F)
                 {
-                    DerefOf (PCCX [One]) [Zero] = 0x9858
-                    DerefOf (PCCX [One]) [One] = 0x00014C08
+                    Store (0x9858, Index (DerefOf (Index (PCCX, One)), Zero))
+                    Store (0x00014C08, Index (DerefOf (Index (PCCX, One)), One))
                 }
                 Case (0x25)
                 {
-                    DerefOf (PCCX [One]) [Zero] = 0x7148
-                    DerefOf (PCCX [One]) [One] = 0xD6D8
+                    Store (0x7148, Index (DerefOf (Index (PCCX, One)), Zero))
+                    Store (0xD6D8, Index (DerefOf (Index (PCCX, One)), One))
                 }
                 Case (0x19)
                 {
-                    DerefOf (PCCX [One]) [Zero] = 0x3E80
-                    DerefOf (PCCX [One]) [One] = 0x7D00
+                    Store (0x3E80, Index (DerefOf (Index (PCCX, One)), Zero))
+                    Store (0x7D00, Index (DerefOf (Index (PCCX, One)), One))
                 }
                 Case (0x0F)
                 {
-                    DerefOf (PCCX [One]) [Zero] = 0x36B0
-                    DerefOf (PCCX [One]) [One] = 0x7D00
+                    Store (0x36B0, Index (DerefOf (Index (PCCX, One)), Zero))
+                    Store (0x7D00, Index (DerefOf (Index (PCCX, One)), One))
                 }
                 Case (0x0B)
                 {
-                    DerefOf (PCCX [One]) [Zero] = 0x36B0
-                    DerefOf (PCCX [One]) [One] = 0x61A8
+                    Store (0x36B0, Index (DerefOf (Index (PCCX, One)), Zero))
+                    Store (0x61A8, Index (DerefOf (Index (PCCX, One)), One))
                 }
                 Default
                 {
-                    DerefOf (PCCX [One]) [Zero] = 0xFF
-                    DerefOf (PCCX [One]) [One] = 0xFF
+                    Store (0xFF, Index (DerefOf (Index (PCCX, One)), Zero))
+                    Store (0xFF, Index (DerefOf (Index (PCCX, One)), One))
                 }
 
             }
@@ -1620,12 +1620,12 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
         })
         Method (CEUC, 0, NotSerialized)
         {
-            CEUP [Zero] = One
-            CEUP [One] = ECEU /* External reference */
-            CEUP [0x02] = TGFG /* External reference */
-            CEUP [0x03] = 0x28
-            CEUP [0x04] = 0x14
-            CEUP [0x05] = 0x14
+            Store (One, Index (CEUP, Zero))
+            Store (ECEU, Index (CEUP, One))
+            Store (TGFG, Index (CEUP, 0x02))
+            Store (0x28, Index (CEUP, 0x03))
+            Store (0x14, Index (CEUP, 0x04))
+            Store (0x14, Index (CEUP, 0x05))
             Return (CEUP) /* \_SB_.PCI0.B0D4.CEUP */
         }
 
@@ -1636,7 +1636,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
         Method (_DTI, 1, NotSerialized)  // _DTI: Device Temperature Indication
         {
-            LSTM = Arg0
+            Store (Arg0, LSTM) /* \_SB_.PCI0.B0D4.LSTM */
             Notify (\_SB.PCI0.B0D4, 0x91) // Device-Specific
         }
 
@@ -1724,9 +1724,9 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
         Method (_PTC, 0, NotSerialized)  // _PTC: Processor Throttling Control
         {
-            If ((CondRefOf (\PC00) && (\PC00 != 0x80000000)))
+            If (LAnd (CondRefOf (\PC00), LNotEqual (\PC00, 0x80000000)))
             {
-                If ((\PC00 & 0x04))
+                If (And (\PC00, 0x04))
                 {
                     Return (Package (0x02)
                     {
@@ -1831,15 +1831,15 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
         Method (_TDL, 0, NotSerialized)  // _TDL: T-State Depth Limit
         {
-            If ((CondRefOf (\_PR.PR00._TSS) && CondRefOf (\_PR.CFGD)))
+            If (LAnd (CondRefOf (\_PR.PR00._TSS), CondRefOf (\_PR.CFGD)))
             {
-                If ((\_PR.CFGD & 0x2000))
+                If (And (\_PR.CFGD, 0x2000))
                 {
-                    Return ((SizeOf (\_PR.PR00.TSMF) - One))
+                    Return (Subtract (SizeOf (\_PR.PR00.TSMF), One))
                 }
                 Else
                 {
-                    Return ((SizeOf (\_PR.PR00.TSMC) - One))
+                    Return (Subtract (SizeOf (\_PR.PR00.TSMC), One))
                 }
             }
             Else
@@ -1852,13 +1852,13 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
         {
             If (CondRefOf (\_PR.PR00._PSS))
             {
-                If ((\_SB.OSCP & 0x0400))
+                If (And (\_SB.OSCP, 0x0400))
                 {
-                    Return ((SizeOf (\_PR.PR00.TPSS) - One))
+                    Return (Subtract (SizeOf (\_PR.PR00.TPSS), One))
                 }
                 Else
                 {
-                    Return ((SizeOf (\_PR.PR00.LPSS) - One))
+                    Return (Subtract (SizeOf (\_PR.PR00.LPSS), One))
                 }
             }
             Else
@@ -1879,7 +1879,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
         Method (_CRT, 0, Serialized)  // _CRT: Critical Temperature
         {
-            If ((\SACR == Zero))
+            If (LEqual (\SACR, Zero))
             {
                 Return (0xFFFFFFFF)
             }
@@ -1889,7 +1889,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
         Method (_CR3, 0, Serialized)  // _CR3: Warm/Standby Temperature
         {
-            If ((\SAC3 == Zero))
+            If (LEqual (\SAC3, Zero))
             {
                 Return (0xFFFFFFFF)
             }
@@ -1899,7 +1899,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
         Method (_HOT, 0, Serialized)  // _HOT: Hot Temperature
         {
-            If ((\SAHT == Zero))
+            If (LEqual (\SAHT, Zero))
             {
                 Return (0xFFFFFFFF)
             }
@@ -1909,9 +1909,9 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
         Method (_SCP, 3, Serialized)  // _SCP: Set Cooling Policy
         {
-            If (((Arg0 == Zero) || (Arg0 == One)))
+            If (LOr (LEqual (Arg0, Zero), LEqual (Arg0, One)))
             {
-                CTYP = Arg0
+                Store (Arg0, CTYP) /* \_SB_.PCI0.B0D4.CTYP */
                 Notify (\_SB.PCI0.B0D4, 0x91) // Device-Specific
             }
         }
@@ -1925,15 +1925,15 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
         Name (RES1, Zero)
         Method (DSCP, 7, Serialized)
         {
-            If (((Arg1 == Zero) || (Arg1 == One)))
+            If (LOr (LEqual (Arg1, Zero), LEqual (Arg1, One)))
             {
-                VERS = Arg0
-                CTYP = Arg1
-                ALMT = Arg2
-                PLMT = Arg3
-                WKLD = Arg4
-                DSTA = Arg5
-                RES1 = Arg6
+                Store (Arg0, VERS) /* \_SB_.PCI0.B0D4.VERS */
+                Store (Arg1, CTYP) /* \_SB_.PCI0.B0D4.CTYP */
+                Store (Arg2, ALMT) /* \_SB_.PCI0.B0D4.ALMT */
+                Store (Arg3, PLMT) /* \_SB_.PCI0.B0D4.PLMT */
+                Store (Arg4, WKLD) /* \_SB_.PCI0.B0D4.WKLD */
+                Store (Arg5, DSTA) /* \_SB_.PCI0.B0D4.DSTA */
+                Store (Arg6, RES1) /* \_SB_.PCI0.B0D4.RES1 */
                 Notify (\_SB.PCI0.B0D4, 0x91) // Device-Specific
             }
         }
@@ -1954,10 +1954,10 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
             Name (AAAA, Zero)
             Name (BBBB, Zero)
             Name (CCCC, Zero)
-            Local0 = CTNL /* \_SB_.PCI0.B0D4.CTNL */
-            If (((Local0 == One) || (Local0 == 0x02)))
+            Store (CTNL, Local0)
+            If (LOr (LEqual (Local0, One), LEqual (Local0, 0x02)))
             {
-                Local0 = \_PR.CLVL /* External reference */
+                Store (\_PR.CLVL, Local0)
             }
             Else
             {
@@ -1967,14 +1967,14 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
                 })
             }
 
-            If ((CLCK == One))
+            If (LEqual (CLCK, One))
             {
-                Local0 = One
+                Store (One, Local0)
             }
 
-            AAAA = CPNU (\_PR.PL10, One)
-            BBBB = CPNU (\_PR.PL11, One)
-            CCCC = CPNU (\_PR.PL12, One)
+            Store (CPNU (\_PR.PL10, One), AAAA) /* \_SB_.PCI0.B0D4.TDPL.AAAA */
+            Store (CPNU (\_PR.PL11, One), BBBB) /* \_SB_.PCI0.B0D4.TDPL.BBBB */
+            Store (CPNU (\_PR.PL12, One), CCCC) /* \_SB_.PCI0.B0D4.TDPL.CCCC */
             Name (TMP1, Package (0x01)
             {
                 Package (0x05)
@@ -2035,174 +2035,174 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
                     0x80000000
                 }
             })
-            If ((Local0 == 0x03))
+            If (LEqual (Local0, 0x03))
             {
-                If ((AAAA > BBBB))
+                If (LGreater (AAAA, BBBB))
                 {
-                    If ((AAAA > CCCC))
+                    If (LGreater (AAAA, CCCC))
                     {
-                        If ((BBBB > CCCC))
+                        If (LGreater (BBBB, CCCC))
                         {
-                            Local3 = Zero
-                            LEV0 = Zero
-                            Local4 = One
-                            LEV1 = One
-                            Local5 = 0x02
-                            LEV2 = 0x02
+                            Store (Zero, Local3)
+                            Store (Zero, LEV0) /* \_SB_.PCI0.B0D4.LEV0 */
+                            Store (One, Local4)
+                            Store (One, LEV1) /* \_SB_.PCI0.B0D4.LEV1 */
+                            Store (0x02, Local5)
+                            Store (0x02, LEV2) /* \_SB_.PCI0.B0D4.LEV2 */
                         }
                         Else
                         {
-                            Local3 = Zero
-                            LEV0 = Zero
-                            Local5 = One
-                            LEV1 = 0x02
-                            Local4 = 0x02
-                            LEV2 = One
+                            Store (Zero, Local3)
+                            Store (Zero, LEV0) /* \_SB_.PCI0.B0D4.LEV0 */
+                            Store (One, Local5)
+                            Store (0x02, LEV1) /* \_SB_.PCI0.B0D4.LEV1 */
+                            Store (0x02, Local4)
+                            Store (One, LEV2) /* \_SB_.PCI0.B0D4.LEV2 */
                         }
                     }
                     Else
                     {
-                        Local5 = Zero
-                        LEV0 = 0x02
-                        Local3 = One
-                        LEV1 = Zero
-                        Local4 = 0x02
-                        LEV2 = One
+                        Store (Zero, Local5)
+                        Store (0x02, LEV0) /* \_SB_.PCI0.B0D4.LEV0 */
+                        Store (One, Local3)
+                        Store (Zero, LEV1) /* \_SB_.PCI0.B0D4.LEV1 */
+                        Store (0x02, Local4)
+                        Store (One, LEV2) /* \_SB_.PCI0.B0D4.LEV2 */
                     }
                 }
-                ElseIf ((BBBB > CCCC))
+                ElseIf (LGreater (BBBB, CCCC))
                 {
-                    If ((AAAA > CCCC))
+                    If (LGreater (AAAA, CCCC))
                     {
-                        Local4 = Zero
-                        LEV0 = One
-                        Local3 = One
-                        LEV1 = Zero
-                        Local5 = 0x02
-                        LEV2 = 0x02
+                        Store (Zero, Local4)
+                        Store (One, LEV0) /* \_SB_.PCI0.B0D4.LEV0 */
+                        Store (One, Local3)
+                        Store (Zero, LEV1) /* \_SB_.PCI0.B0D4.LEV1 */
+                        Store (0x02, Local5)
+                        Store (0x02, LEV2) /* \_SB_.PCI0.B0D4.LEV2 */
                     }
                     Else
                     {
-                        Local4 = Zero
-                        LEV0 = One
-                        Local5 = One
-                        LEV1 = 0x02
-                        Local3 = 0x02
-                        LEV2 = Zero
+                        Store (Zero, Local4)
+                        Store (One, LEV0) /* \_SB_.PCI0.B0D4.LEV0 */
+                        Store (One, Local5)
+                        Store (0x02, LEV1) /* \_SB_.PCI0.B0D4.LEV1 */
+                        Store (0x02, Local3)
+                        Store (Zero, LEV2) /* \_SB_.PCI0.B0D4.LEV2 */
                     }
                 }
                 Else
                 {
-                    Local5 = Zero
-                    LEV0 = 0x02
-                    Local4 = One
-                    LEV1 = One
-                    Local3 = 0x02
-                    LEV2 = Zero
+                    Store (Zero, Local5)
+                    Store (0x02, LEV0) /* \_SB_.PCI0.B0D4.LEV0 */
+                    Store (One, Local4)
+                    Store (One, LEV1) /* \_SB_.PCI0.B0D4.LEV1 */
+                    Store (0x02, Local3)
+                    Store (Zero, LEV2) /* \_SB_.PCI0.B0D4.LEV2 */
                 }
 
-                Local1 = (\_PR.TAR0 + One)
-                Local2 = (Local1 * 0x64)
-                DerefOf (TMP3 [Local3]) [Zero] = AAAA /* \_SB_.PCI0.B0D4.TDPL.AAAA */
-                DerefOf (TMP3 [Local3]) [One] = Local2
-                DerefOf (TMP3 [Local3]) [0x02] = \_PR.CTC0 /* External reference */
-                DerefOf (TMP3 [Local3]) [0x03] = Local1
-                DerefOf (TMP3 [Local3]) [0x04] = Zero
-                Local1 = (\_PR.TAR1 + One)
-                Local2 = (Local1 * 0x64)
-                DerefOf (TMP3 [Local4]) [Zero] = BBBB /* \_SB_.PCI0.B0D4.TDPL.BBBB */
-                DerefOf (TMP3 [Local4]) [One] = Local2
-                DerefOf (TMP3 [Local4]) [0x02] = \_PR.CTC1 /* External reference */
-                DerefOf (TMP3 [Local4]) [0x03] = Local1
-                DerefOf (TMP3 [Local4]) [0x04] = Zero
-                Local1 = (\_PR.TAR2 + One)
-                Local2 = (Local1 * 0x64)
-                DerefOf (TMP3 [Local5]) [Zero] = CCCC /* \_SB_.PCI0.B0D4.TDPL.CCCC */
-                DerefOf (TMP3 [Local5]) [One] = Local2
-                DerefOf (TMP3 [Local5]) [0x02] = \_PR.CTC2 /* External reference */
-                DerefOf (TMP3 [Local5]) [0x03] = Local1
-                DerefOf (TMP3 [Local5]) [0x04] = Zero
+                Store (Add (\_PR.TAR0, One), Local1)
+                Multiply (Local1, 0x64, Local2)
+                Store (AAAA, Index (DerefOf (Index (TMP3, Local3)), Zero))
+                Store (Local2, Index (DerefOf (Index (TMP3, Local3)), One))
+                Store (\_PR.CTC0, Index (DerefOf (Index (TMP3, Local3)), 0x02))
+                Store (Local1, Index (DerefOf (Index (TMP3, Local3)), 0x03))
+                Store (Zero, Index (DerefOf (Index (TMP3, Local3)), 0x04))
+                Store (Add (\_PR.TAR1, One), Local1)
+                Multiply (Local1, 0x64, Local2)
+                Store (BBBB, Index (DerefOf (Index (TMP3, Local4)), Zero))
+                Store (Local2, Index (DerefOf (Index (TMP3, Local4)), One))
+                Store (\_PR.CTC1, Index (DerefOf (Index (TMP3, Local4)), 0x02))
+                Store (Local1, Index (DerefOf (Index (TMP3, Local4)), 0x03))
+                Store (Zero, Index (DerefOf (Index (TMP3, Local4)), 0x04))
+                Store (Add (\_PR.TAR2, One), Local1)
+                Multiply (Local1, 0x64, Local2)
+                Store (CCCC, Index (DerefOf (Index (TMP3, Local5)), Zero))
+                Store (Local2, Index (DerefOf (Index (TMP3, Local5)), One))
+                Store (\_PR.CTC2, Index (DerefOf (Index (TMP3, Local5)), 0x02))
+                Store (Local1, Index (DerefOf (Index (TMP3, Local5)), 0x03))
+                Store (Zero, Index (DerefOf (Index (TMP3, Local5)), 0x04))
                 Return (TMP3) /* \_SB_.PCI0.B0D4.TDPL.TMP3 */
             }
 
-            If ((Local0 == 0x02))
+            If (LEqual (Local0, 0x02))
             {
-                If ((AAAA > BBBB))
+                If (LGreater (AAAA, BBBB))
                 {
-                    Local3 = Zero
-                    Local4 = One
-                    LEV0 = Zero
-                    LEV1 = One
-                    LEV2 = Zero
+                    Store (Zero, Local3)
+                    Store (One, Local4)
+                    Store (Zero, LEV0) /* \_SB_.PCI0.B0D4.LEV0 */
+                    Store (One, LEV1) /* \_SB_.PCI0.B0D4.LEV1 */
+                    Store (Zero, LEV2) /* \_SB_.PCI0.B0D4.LEV2 */
                 }
                 Else
                 {
-                    Local4 = Zero
-                    Local3 = One
-                    LEV0 = One
-                    LEV1 = Zero
-                    LEV2 = Zero
+                    Store (Zero, Local4)
+                    Store (One, Local3)
+                    Store (One, LEV0) /* \_SB_.PCI0.B0D4.LEV0 */
+                    Store (Zero, LEV1) /* \_SB_.PCI0.B0D4.LEV1 */
+                    Store (Zero, LEV2) /* \_SB_.PCI0.B0D4.LEV2 */
                 }
 
-                Local1 = (\_PR.TAR0 + One)
-                Local2 = (Local1 * 0x64)
-                DerefOf (TMP2 [Local3]) [Zero] = AAAA /* \_SB_.PCI0.B0D4.TDPL.AAAA */
-                DerefOf (TMP2 [Local3]) [One] = Local2
-                DerefOf (TMP2 [Local3]) [0x02] = \_PR.CTC0 /* External reference */
-                DerefOf (TMP2 [Local3]) [0x03] = Local1
-                DerefOf (TMP2 [Local3]) [0x04] = Zero
-                Local1 = (\_PR.TAR1 + One)
-                Local2 = (Local1 * 0x64)
-                DerefOf (TMP2 [Local4]) [Zero] = BBBB /* \_SB_.PCI0.B0D4.TDPL.BBBB */
-                DerefOf (TMP2 [Local4]) [One] = Local2
-                DerefOf (TMP2 [Local4]) [0x02] = \_PR.CTC1 /* External reference */
-                DerefOf (TMP2 [Local4]) [0x03] = Local1
-                DerefOf (TMP2 [Local4]) [0x04] = Zero
+                Store (Add (\_PR.TAR0, One), Local1)
+                Multiply (Local1, 0x64, Local2)
+                Store (AAAA, Index (DerefOf (Index (TMP2, Local3)), Zero))
+                Store (Local2, Index (DerefOf (Index (TMP2, Local3)), One))
+                Store (\_PR.CTC0, Index (DerefOf (Index (TMP2, Local3)), 0x02))
+                Store (Local1, Index (DerefOf (Index (TMP2, Local3)), 0x03))
+                Store (Zero, Index (DerefOf (Index (TMP2, Local3)), 0x04))
+                Store (Add (\_PR.TAR1, One), Local1)
+                Multiply (Local1, 0x64, Local2)
+                Store (BBBB, Index (DerefOf (Index (TMP2, Local4)), Zero))
+                Store (Local2, Index (DerefOf (Index (TMP2, Local4)), One))
+                Store (\_PR.CTC1, Index (DerefOf (Index (TMP2, Local4)), 0x02))
+                Store (Local1, Index (DerefOf (Index (TMP2, Local4)), 0x03))
+                Store (Zero, Index (DerefOf (Index (TMP2, Local4)), 0x04))
                 Return (TMP2) /* \_SB_.PCI0.B0D4.TDPL.TMP2 */
             }
 
-            If ((Local0 == One))
+            If (LEqual (Local0, One))
             {
                 Switch (ToInteger (\_PR.CBMI))
                 {
                     Case (Zero)
                     {
-                        Local1 = (\_PR.TAR0 + One)
-                        Local2 = (Local1 * 0x64)
-                        DerefOf (TMP1 [Zero]) [Zero] = AAAA /* \_SB_.PCI0.B0D4.TDPL.AAAA */
-                        DerefOf (TMP1 [Zero]) [One] = Local2
-                        DerefOf (TMP1 [Zero]) [0x02] = \_PR.CTC0 /* External reference */
-                        DerefOf (TMP1 [Zero]) [0x03] = Local1
-                        DerefOf (TMP1 [Zero]) [0x04] = Zero
-                        LEV0 = Zero
-                        LEV1 = Zero
-                        LEV2 = Zero
+                        Store (Add (\_PR.TAR0, One), Local1)
+                        Multiply (Local1, 0x64, Local2)
+                        Store (AAAA, Index (DerefOf (Index (TMP1, Zero)), Zero))
+                        Store (Local2, Index (DerefOf (Index (TMP1, Zero)), One))
+                        Store (\_PR.CTC0, Index (DerefOf (Index (TMP1, Zero)), 0x02))
+                        Store (Local1, Index (DerefOf (Index (TMP1, Zero)), 0x03))
+                        Store (Zero, Index (DerefOf (Index (TMP1, Zero)), 0x04))
+                        Store (Zero, LEV0) /* \_SB_.PCI0.B0D4.LEV0 */
+                        Store (Zero, LEV1) /* \_SB_.PCI0.B0D4.LEV1 */
+                        Store (Zero, LEV2) /* \_SB_.PCI0.B0D4.LEV2 */
                     }
                     Case (One)
                     {
-                        Local1 = (\_PR.TAR1 + One)
-                        Local2 = (Local1 * 0x64)
-                        DerefOf (TMP1 [Zero]) [Zero] = BBBB /* \_SB_.PCI0.B0D4.TDPL.BBBB */
-                        DerefOf (TMP1 [Zero]) [One] = Local2
-                        DerefOf (TMP1 [Zero]) [0x02] = \_PR.CTC1 /* External reference */
-                        DerefOf (TMP1 [Zero]) [0x03] = Local1
-                        DerefOf (TMP1 [Zero]) [0x04] = Zero
-                        LEV0 = One
-                        LEV1 = One
-                        LEV2 = One
+                        Store (Add (\_PR.TAR1, One), Local1)
+                        Multiply (Local1, 0x64, Local2)
+                        Store (BBBB, Index (DerefOf (Index (TMP1, Zero)), Zero))
+                        Store (Local2, Index (DerefOf (Index (TMP1, Zero)), One))
+                        Store (\_PR.CTC1, Index (DerefOf (Index (TMP1, Zero)), 0x02))
+                        Store (Local1, Index (DerefOf (Index (TMP1, Zero)), 0x03))
+                        Store (Zero, Index (DerefOf (Index (TMP1, Zero)), 0x04))
+                        Store (One, LEV0) /* \_SB_.PCI0.B0D4.LEV0 */
+                        Store (One, LEV1) /* \_SB_.PCI0.B0D4.LEV1 */
+                        Store (One, LEV2) /* \_SB_.PCI0.B0D4.LEV2 */
                     }
                     Case (0x02)
                     {
-                        Local1 = (\_PR.TAR2 + One)
-                        Local2 = (Local1 * 0x64)
-                        DerefOf (TMP1 [Zero]) [Zero] = CCCC /* \_SB_.PCI0.B0D4.TDPL.CCCC */
-                        DerefOf (TMP1 [Zero]) [One] = Local2
-                        DerefOf (TMP1 [Zero]) [0x02] = \_PR.CTC2 /* External reference */
-                        DerefOf (TMP1 [Zero]) [0x03] = Local1
-                        DerefOf (TMP1 [Zero]) [0x04] = Zero
-                        LEV0 = 0x02
-                        LEV1 = 0x02
-                        LEV2 = 0x02
+                        Store (Add (\_PR.TAR2, One), Local1)
+                        Multiply (Local1, 0x64, Local2)
+                        Store (CCCC, Index (DerefOf (Index (TMP1, Zero)), Zero))
+                        Store (Local2, Index (DerefOf (Index (TMP1, Zero)), One))
+                        Store (\_PR.CTC2, Index (DerefOf (Index (TMP1, Zero)), 0x02))
+                        Store (Local1, Index (DerefOf (Index (TMP1, Zero)), 0x03))
+                        Store (Zero, Index (DerefOf (Index (TMP1, Zero)), 0x04))
+                        Store (0x02, LEV0) /* \_SB_.PCI0.B0D4.LEV0 */
+                        Store (0x02, LEV1) /* \_SB_.PCI0.B0D4.LEV1 */
+                        Store (0x02, LEV2) /* \_SB_.PCI0.B0D4.LEV2 */
                     }
 
                 }
@@ -2224,7 +2224,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
         Name (LEV2, Zero)
         Method (STDP, 1, Serialized)
         {
-            If ((Arg0 >= \_PR.CLVL))
+            If (LGreaterEqual (Arg0, \_PR.CLVL))
             {
                 Return (Zero)
             }
@@ -2233,15 +2233,15 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
             {
                 Case (Zero)
                 {
-                    Local0 = LEV0 /* \_SB_.PCI0.B0D4.LEV0 */
+                    Store (LEV0, Local0)
                 }
                 Case (One)
                 {
-                    Local0 = LEV1 /* \_SB_.PCI0.B0D4.LEV1 */
+                    Store (LEV1, Local0)
                 }
                 Case (0x02)
                 {
-                    Local0 = LEV2 /* \_SB_.PCI0.B0D4.LEV2 */
+                    Store (LEV2, Local0)
                 }
 
             }
@@ -2275,7 +2275,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
         })
         Method (CLPM, 0, NotSerialized)
         {
-            If ((\_SB.PCI0.B0D4.LPMS == Zero))
+            If (LEqual (\_SB.PCI0.B0D4.LPMS, Zero))
             {
                 Return (Zero)
             }
@@ -2341,7 +2341,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
             Name (CTYP, Zero)
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                If ((S1DE == One))
+                If (LEqual (S1DE, One))
                 {
                     Return (0x0F)
                 }
@@ -2353,8 +2353,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
             Method (_TMP, 0, Serialized)  // _TMP: Temperature
             {
-                Local0 = \GTST ()
-                Local1 = \_TZ._C2K (Local0)
+                Store (\GTST (), Local0)
+                Store (\_TZ._C2K (Local0), Local1)
                 Return (Local1)
             }
 
@@ -2363,7 +2363,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
             Name (LSTM, Zero)
             Method (_DTI, 1, NotSerialized)  // _DTI: Device Temperature Indication
             {
-                LSTM = Arg0
+                Store (Arg0, LSTM) /* \_SB_.PCI0.LPCB.EC__.SEN1.LSTM */
                 Notify (\_SB.PCI0.LPCB.EC.SEN1, 0x91) // Device-Specific
             }
 
@@ -2384,7 +2384,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
             Method (_CRT, 0, Serialized)  // _CRT: Critical Temperature
             {
-                If ((S1CT == Zero))
+                If (LEqual (S1CT, Zero))
                 {
                     Return (0xFFFFFFFF)
                 }
@@ -2394,7 +2394,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
             Method (_CR3, 0, Serialized)  // _CR3: Warm/Standby Temperature
             {
-                If ((S1S3 == Zero))
+                If (LEqual (S1S3, Zero))
                 {
                     Return (0xFFFFFFFF)
                 }
@@ -2404,7 +2404,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
             Method (_HOT, 0, Serialized)  // _HOT: Hot Temperature
             {
-                If ((S1HT == Zero))
+                If (LEqual (S1HT, Zero))
                 {
                     Return (0xFFFFFFFF)
                 }
@@ -2414,9 +2414,9 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
 
             Method (_SCP, 3, Serialized)  // _SCP: Set Cooling Policy
             {
-                If (((Arg0 == Zero) || (Arg0 == One)))
+                If (LOr (LEqual (Arg0, Zero), LEqual (Arg0, One)))
                 {
-                    CTYP = Arg0
+                    Store (Arg0, CTYP) /* \_SB_.PCI0.LPCB.EC__.SEN1.CTYP */
                     Notify (\_SB.PCI0.LPCB.EC.SEN1, 0x91) // Device-Specific
                 }
             }
@@ -2429,15 +2429,15 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "DptfTabl", 0x00001000)
             Name (RES1, Zero)
             Method (DSCP, 7, Serialized)
             {
-                If (((Arg1 == Zero) || (Arg1 == One)))
+                If (LOr (LEqual (Arg1, Zero), LEqual (Arg1, One)))
                 {
-                    VERS = Arg0
-                    CTYP = Arg1
-                    ALMT = Arg2
-                    PLMT = Arg3
-                    WKLD = Arg4
-                    DSTA = Arg5
-                    RES1 = Arg6
+                    Store (Arg0, VERS) /* \_SB_.PCI0.LPCB.EC__.SEN1.VERS */
+                    Store (Arg1, CTYP) /* \_SB_.PCI0.LPCB.EC__.SEN1.CTYP */
+                    Store (Arg2, ALMT) /* \_SB_.PCI0.LPCB.EC__.SEN1.ALMT */
+                    Store (Arg3, PLMT) /* \_SB_.PCI0.LPCB.EC__.SEN1.PLMT */
+                    Store (Arg4, WKLD) /* \_SB_.PCI0.LPCB.EC__.SEN1.WKLD */
+                    Store (Arg5, DSTA) /* \_SB_.PCI0.LPCB.EC__.SEN1.DSTA */
+                    Store (Arg6, RES1) /* \_SB_.PCI0.LPCB.EC__.SEN1.RES1 */
                     Notify (\_SB.PCI0.LPCB.EC.SEN1, 0x91) // Device-Specific
                 }
             }

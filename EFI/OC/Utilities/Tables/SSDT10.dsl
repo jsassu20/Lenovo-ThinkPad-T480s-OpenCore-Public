@@ -3,9 +3,9 @@
  * AML/ASL+ Disassembler version 20200925 (64-bit version)
  * Copyright (c) 2000 - 2020 Intel Corporation
  * 
- * Disassembling to symbolic ASL+ operators
+ * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of SSDT10.aml, Sun May  2 11:05:07 2021
+ * Disassembly of SSDT10.aml, Thu May  6 01:10:51 2021
  *
  * Original Table Header:
  *     Signature        "SSDT"
@@ -28,7 +28,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
     External (UPT2, IntObj)
     External (USME, IntObj)
 
-    If (((TBTS == One) && (TBSE == One)))
+    If (LAnd (LEqual (TBTS, One), LEqual (TBSE, One)))
     {
         Scope (\_SB.PCI0.RP01.PXSX)
         {
@@ -62,18 +62,18 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
                             {
                                 Buffer (0x10){}
                             })
-                            CreateField (DerefOf (PCKG [Zero]), Zero, 0x07, REV)
-                            REV = One
-                            CreateField (DerefOf (PCKG [Zero]), 0x40, One, VISI)
-                            VISI = Arg0
-                            CreateField (DerefOf (PCKG [Zero]), 0x57, 0x08, GPOS)
-                            GPOS = Arg1
-                            CreateField (DerefOf (PCKG [Zero]), 0x4A, 0x04, SHAP)
-                            SHAP = One
-                            CreateField (DerefOf (PCKG [Zero]), 0x20, 0x10, WID)
-                            WID = 0x08
-                            CreateField (DerefOf (PCKG [Zero]), 0x30, 0x10, HGT)
-                            HGT = 0x03
+                            CreateField (DerefOf (Index (PCKG, Zero)), Zero, 0x07, REV)
+                            Store (One, REV) /* \_SB_.PCI0.RP01.PXSX.TBDU.XHC_.RHUB.TPLD.REV_ */
+                            CreateField (DerefOf (Index (PCKG, Zero)), 0x40, One, VISI)
+                            Store (Arg0, VISI) /* \_SB_.PCI0.RP01.PXSX.TBDU.XHC_.RHUB.TPLD.VISI */
+                            CreateField (DerefOf (Index (PCKG, Zero)), 0x57, 0x08, GPOS)
+                            Store (Arg1, GPOS) /* \_SB_.PCI0.RP01.PXSX.TBDU.XHC_.RHUB.TPLD.GPOS */
+                            CreateField (DerefOf (Index (PCKG, Zero)), 0x4A, 0x04, SHAP)
+                            Store (One, SHAP) /* \_SB_.PCI0.RP01.PXSX.TBDU.XHC_.RHUB.TPLD.SHAP */
+                            CreateField (DerefOf (Index (PCKG, Zero)), 0x20, 0x10, WID)
+                            Store (0x08, WID) /* \_SB_.PCI0.RP01.PXSX.TBDU.XHC_.RHUB.TPLD.WID_ */
+                            CreateField (DerefOf (Index (PCKG, Zero)), 0x30, 0x10, HGT)
+                            Store (0x03, HGT) /* \_SB_.PCI0.RP01.PXSX.TBDU.XHC_.RHUB.TPLD.HGT_ */
                             Return (PCKG) /* \_SB_.PCI0.RP01.PXSX.TBDU.XHC_.RHUB.TPLD.PCKG */
                         }
 
@@ -86,8 +86,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
                                 Zero, 
                                 Zero
                             })
-                            PCKG [Zero] = Arg0
-                            PCKG [One] = Arg1
+                            Store (Arg0, Index (PCKG, Zero))
+                            Store (Arg1, Index (PCKG, One))
                             Return (PCKG) /* \_SB_.PCI0.RP01.PXSX.TBDU.XHC_.RHUB.TUPC.PCKG */
                         }
 
@@ -96,7 +96,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
                             Name (_ADR, One)  // _ADR: Address
                             Method (_UPC, 0, NotSerialized)  // _UPC: USB Port Capabilities
                             {
-                                If ((USME == Zero))
+                                If (LEqual (USME, Zero))
                                 {
                                     Return (TUPC (One, 0x08))
                                 }
@@ -108,7 +108,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
 
                             Method (_PLD, 0, NotSerialized)  // _PLD: Physical Location of Device
                             {
-                                If ((USME == Zero))
+                                If (LEqual (USME, Zero))
                                 {
                                     Return (TPLD (One, One))
                                 }
@@ -138,7 +138,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
                             Name (_ADR, 0x03)  // _ADR: Address
                             Method (_UPC, 0, NotSerialized)  // _UPC: USB Port Capabilities
                             {
-                                If ((USME == Zero))
+                                If (LEqual (USME, Zero))
                                 {
                                     Return (TUPC (One, 0x09))
                                 }
@@ -150,7 +150,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
 
                             Method (_PLD, 0, NotSerialized)  // _PLD: Physical Location of Device
                             {
-                                If ((USME == Zero))
+                                If (LEqual (USME, Zero))
                                 {
                                     Return (TPLD (One, One))
                                 }
@@ -180,7 +180,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
         }
     }
 
-    If (((TBTS == One) && (TBSE == 0x05)))
+    If (LAnd (LEqual (TBTS, One), LEqual (TBSE, 0x05)))
     {
         Scope (\_SB.PCI0.RP05.PXSX)
         {
@@ -214,18 +214,18 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
                             {
                                 Buffer (0x10){}
                             })
-                            CreateField (DerefOf (PCKG [Zero]), Zero, 0x07, REV)
-                            REV = One
-                            CreateField (DerefOf (PCKG [Zero]), 0x40, One, VISI)
-                            VISI = Arg0
-                            CreateField (DerefOf (PCKG [Zero]), 0x57, 0x08, GPOS)
-                            GPOS = Arg1
-                            CreateField (DerefOf (PCKG [Zero]), 0x4A, 0x04, SHAP)
-                            SHAP = One
-                            CreateField (DerefOf (PCKG [Zero]), 0x20, 0x10, WID)
-                            WID = 0x08
-                            CreateField (DerefOf (PCKG [Zero]), 0x30, 0x10, HGT)
-                            HGT = 0x03
+                            CreateField (DerefOf (Index (PCKG, Zero)), Zero, 0x07, REV)
+                            Store (One, REV) /* \_SB_.PCI0.RP05.PXSX.TBDU.XHC_.RHUB.TPLD.REV_ */
+                            CreateField (DerefOf (Index (PCKG, Zero)), 0x40, One, VISI)
+                            Store (Arg0, VISI) /* \_SB_.PCI0.RP05.PXSX.TBDU.XHC_.RHUB.TPLD.VISI */
+                            CreateField (DerefOf (Index (PCKG, Zero)), 0x57, 0x08, GPOS)
+                            Store (Arg1, GPOS) /* \_SB_.PCI0.RP05.PXSX.TBDU.XHC_.RHUB.TPLD.GPOS */
+                            CreateField (DerefOf (Index (PCKG, Zero)), 0x4A, 0x04, SHAP)
+                            Store (One, SHAP) /* \_SB_.PCI0.RP05.PXSX.TBDU.XHC_.RHUB.TPLD.SHAP */
+                            CreateField (DerefOf (Index (PCKG, Zero)), 0x20, 0x10, WID)
+                            Store (0x08, WID) /* \_SB_.PCI0.RP05.PXSX.TBDU.XHC_.RHUB.TPLD.WID_ */
+                            CreateField (DerefOf (Index (PCKG, Zero)), 0x30, 0x10, HGT)
+                            Store (0x03, HGT) /* \_SB_.PCI0.RP05.PXSX.TBDU.XHC_.RHUB.TPLD.HGT_ */
                             Return (PCKG) /* \_SB_.PCI0.RP05.PXSX.TBDU.XHC_.RHUB.TPLD.PCKG */
                         }
 
@@ -238,8 +238,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
                                 Zero, 
                                 Zero
                             })
-                            PCKG [Zero] = Arg0
-                            PCKG [One] = Arg1
+                            Store (Arg0, Index (PCKG, Zero))
+                            Store (Arg1, Index (PCKG, One))
                             Return (PCKG) /* \_SB_.PCI0.RP05.PXSX.TBDU.XHC_.RHUB.TUPC.PCKG */
                         }
 
@@ -248,7 +248,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
                             Name (_ADR, One)  // _ADR: Address
                             Method (_UPC, 0, NotSerialized)  // _UPC: USB Port Capabilities
                             {
-                                If ((USME == Zero))
+                                If (LEqual (USME, Zero))
                                 {
                                     Return (TUPC (One, 0x08))
                                 }
@@ -260,7 +260,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
 
                             Method (_PLD, 0, NotSerialized)  // _PLD: Physical Location of Device
                             {
-                                If ((USME == Zero))
+                                If (LEqual (USME, Zero))
                                 {
                                     Return (TPLD (One, One))
                                 }
@@ -290,7 +290,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
                             Name (_ADR, 0x03)  // _ADR: Address
                             Method (_UPC, 0, NotSerialized)  // _UPC: USB Port Capabilities
                             {
-                                If ((USME == Zero))
+                                If (LEqual (USME, Zero))
                                 {
                                     Return (TUPC (One, 0x09))
                                 }
@@ -302,7 +302,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "TbtTypeC", 0x00000000)
 
                             Method (_PLD, 0, NotSerialized)  // _PLD: Physical Location of Device
                             {
-                                If ((USME == Zero))
+                                If (LEqual (USME, Zero))
                                 {
                                     Return (TPLD (One, One))
                                 }
